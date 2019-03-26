@@ -135,8 +135,10 @@ function rate(e){
     }
     const movieListElement = document.querySelector(`[data-movieUnwatched = "${movie}"]`)
     movieList.removeChild(movieListElement);
+    if (this.value != "remove"){
+        appendWatchedMovieList(movie, this.value);
+    }
     
-    appendWatchedMovieList(movie, this.value);
 }
 
 function unrate(e){
