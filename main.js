@@ -35,7 +35,7 @@ function generateMovieList(){
                 <option value="pretty-good">Pretty Good</option>
                 <option value="great">Great</option>
                 <option value="masterpiece">Masterpiece</option>
-                </select>
+                </select></li>`;
             }
         });
     });
