@@ -1,0 +1,19 @@
+.header{
+    text-align: center;
+}
+
+.movie-list-container{
+    display: flex;
+    font-size: 2em;
+}
+.movie-list{
+    flex: 1;
+}
+.watched-movies{
+    flex:1;
+}
+
+
+.rand-gen{
+    text-align: center;
+}

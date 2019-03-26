@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Jammin Movies</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyC-TNGhKhFtSMicH20PxCHVeauBKDFsITU",
+        authDomain: "jammin-movies.firebaseapp.com",
+        databaseURL: "https://jammin-movies.firebaseio.com",
+        projectId: "jammin-movies",
+        storageBucket: "jammin-movies.appspot.com",
+        messagingSenderId: "203686718902"
+      };
+      firebase.initializeApp(config);
+    </script>
+</head>
+<body>
+    <div class="header">
+        <h1>Jammin Movies</h1>
+        <h3>A Collection of movies to watch and rate!</h3>
+    </div>
+
+    <div class="rand-gen">
+        <input type="button" name="random" id="random" value="Random Number Generator">
+        <h2 class="rand-gen-display">0</h2>
+    </div>
+
+    <div class="movie-list-container">
+        <ol class="movie-list"></ol>
+        <ol class = "watched-movies"></ol>
+    </div>
+
+    <div class="movie-add">
+        <h3>Add a New Movie:</h3>
+        <input type="text" id="add-movie">
+        <input type="submit" name="movie-submit" id="add-movie-submit">
+    </div>
+    
+
+
+
+
+
+
+    <script src="main.js"></script>
+</body>
+</html>
