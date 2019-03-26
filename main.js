@@ -1,6 +1,6 @@
 const db = firebase.firestore();
 
-//UTILITY
+/////////////////////////////////UTILITY///////////////////////////////////////////////////////////////////////
 function isMobileDevice() {
     return (navigator.userAgent.match(/Android/i)
     || navigator.userAgent.match(/webOS/i)
@@ -26,7 +26,7 @@ function appendUnwatchedMovieList(movieTitle){
 }
 
 function appendWatchedMovieList(movieTitle, rating){
-    watchedMovies.innerHTML += `<div class="${rating} watched-movie" data-movieWatched="${movieTitle}" watched-movie"> ${movieTitle} <button id="unwatch" data-movie="${movieTitle}" style="float:none">Unwatch/Rate</button></div>`;
+    watchedMovies.innerHTML += `<div class="${rating} watched-movie" data-movieWatched="${movieTitle}" watched-movie"> ${movieTitle} <button id="unwatch" data-movie="${movieTitle}">Unwatch/Rate</button></div>`;
     generateEventListeners();
 
 }
@@ -36,6 +36,18 @@ function generateEventListeners(){
     ratingDropDowns.forEach(menu => menu.addEventListener('change', rate));
     unrateButtons = document.querySelectorAll("#unwatch");
     unrateButtons.forEach(button => button.addEventListener('click',unrate))
+}
+
+
+const useButton = document.querySelector(".login");
+useButton.addEventListener('click', generate);
+function generate(){
+    let cat = window.prompt();
+    if (cat == "suhdood"){
+        addMovieButton.disabled = false;
+        document.querySelectorAll("button").forEach(button => button.disabled=false);
+        ratingDropDowns.forEach(menu => menu.disabled=false);
+    }
 }
 //////////////////////// RANDOM NUMBER GENERATOR //////////////////////////
 const randomNumButton = document.querySelector("#random");
@@ -54,7 +66,6 @@ randomNumButton.addEventListener("click", generateRandom);
 /////////////////////// MOVIE LIST GENERATOR //////////////////////////////////////////
 const movieList = document.querySelector(".unwatched-movies");
 const watchedMovies = document.querySelector(".watched-movies");
-let ratingSubmit = document.querySelectorAll("#rate");
 let ratingDropDowns = document.querySelectorAll("#ratings");
 
 function generateMovieList(){
@@ -64,10 +75,18 @@ function generateMovieList(){
     const movies = db.collection("Movies").get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
             if (doc.data().watched == true){
-                appendWatchedMovieList(doc.data().Title, doc.data().rating);
+                watchedMovies.innerHTML += `<div class="${doc.data().rating} watched-movie" data-movieWatched="${doc.data().Title}" watched-movie"> ${doc.data().Title} <button id="unwatch" data-movie="${doc.data().Title}" disabled=true>Unwatch/Rate</button></div>`;
                 }
             else{
-                appendUnwatchedMovieList(doc.data().Title);
+                movieList.innerHTML += `<li data-movieUnwatched="${doc.data().Title}"> ${doc.data().Title} <select data-movie="${doc.data().Title}" id="ratings" disabled=true>
+                <option value="null" selected>Select Rating</option>
+                <option value="bad">Bad</option>
+                <option value="meh">Meh</option>
+                <option value="pretty-good">Pretty Good</option>
+                <option value="great">Great</option>
+                <option value="masterpiece">Masterpiece</option>
+                <option value="remove">Remove Movie</option>
+                </select></li>`;
             }
         });
     });
@@ -75,9 +94,8 @@ function generateMovieList(){
         ratingDropDowns = document.querySelectorAll("#ratings");
         ratingDropDowns.forEach(menu => menu.addEventListener('change', rate));
         unrateButtons = document.querySelectorAll("#unwatch");
-        unrateButtons.forEach(button => button.addEventListener('click',unrate))
-        console.log(ratingDropDowns);
-        console.log(unrateButtons)
+        unrateButtons.forEach(button => button.addEventListener('click',unrate));
+        useButton.disabled = false;
     },2000);
 }
 generateMovieList();

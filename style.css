@@ -34,7 +34,10 @@ html{
     align-items: center;
 }
 
-
+.login{
+    display: block;
+    margin: auto;
+}
 .rand-gen{
     text-align: center;
 }
