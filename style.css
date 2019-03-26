@@ -25,7 +25,7 @@ html{
 .watched-movie-list h3{
     margin-bottom: 0;
 }
-.watched-movie-list li{
+.watched-movie{
     color: white;
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
     padding-left: 10px;

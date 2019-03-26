@@ -39,10 +39,10 @@ function generateMovieList(){
         querySnapshot.forEach(function(doc) {
             if (doc.data().watched == true){
                 if (isMobileDevice){
-                watchedMovies.innerHTML += `<li class="${doc.data().rating}"> ${doc.data().Title} <button id="unwatch" data-movie="${doc.data().Title}" style="float:none">Unwatch/Rate</button></li>`;
+                watchedMovies.innerHTML += `<div class="${doc.data().rating} watched-movie"> ${doc.data().Title} <button id="unwatch" data-movie="${doc.data().Title}" style="float:none">Unwatch/Rate</button></div>`;
                 }
                 else{
-                    watchedMovies.innerHTML += `<li class="${doc.data().rating}"> ${doc.data().Title} <button id="unwatch" data-movie="${doc.data().Title}">Unwatch/Rate</button></li>`;
+                    watchedMovies.innerHTML += `<div class="${doc.data().rating} watched-movie"> ${doc.data().Title} <button id="unwatch" data-movie="${doc.data().Title}">Unwatch/Rate</button></l>`;
                 }
             }
             else{
