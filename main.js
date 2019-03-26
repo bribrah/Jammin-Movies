@@ -4,12 +4,12 @@ const randomNumButton = document.querySelector("#random");
 const randomNumDisplay = document.querySelector(".rand-gen-display");
 
 function generateRandom(){
-    const size = movieList.querySelectorAll("li").length;
+    const movieListElements = movieList.querySelectorAll("li");
+    const size = movieListElements.length;
 
  
-    console.log(size);
 
-    randomNumDisplay.textContent = `${Math.floor(Math.random() * (size )+ 1)}`;
+    randomNumDisplay.textContent = `${movieListElements[Math.floor(Math.random() * size)].childNodes[0].textContent}`;
 }
 randomNumButton.addEventListener("click", generateRandom);
 
