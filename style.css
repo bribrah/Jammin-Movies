@@ -10,7 +10,7 @@ html{
 
 .movie-list-container{
     display: flex;
-    font-size: 5vmin;
+    font-size: 4vmin;
     font-weight: bold;
     justify-content: center;
     
