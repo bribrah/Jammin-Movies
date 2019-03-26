@@ -4,7 +4,7 @@ const randomNumButton = document.querySelector("#random");
 const randomNumDisplay = document.querySelector(".rand-gen-display");
 
 function generateRandom(){
-    const size = document.querySelectorAll("li").length;
+    const size = movieList.querySelectorAll("li").length;
 
  
     console.log(size);
@@ -14,22 +14,37 @@ function generateRandom(){
 randomNumButton.addEventListener("click", generateRandom);
 
 /////////////////////// MOVIE LIST GENERATOR //////////////////////////////////////////
-const movieList = document.querySelector(".movie-list");
+const movieList = document.querySelector(".unwatched-movies");
 const watchedMovies = document.querySelector(".watched-movies");
+let ratingSubmit = document.querySelectorAll("#rate");
+let ratingDropDowns = document.querySelectorAll("#ratings");
 
 function generateMovieList(){
+    movieList.innerHTML= "";
+    watchedMovies.innerHTML = ""
     const movies = db.collection("Movies").get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
             if (doc.data().watched == true){
-                watchedMovies.innerHTML += `<li> ${doc.data().Title} </li>`;
+                watchedMovies.innerHTML += `<li class="${doc.data().rating}"> ${doc.data().Title} </li>`;
             }
             else{
-                movieList.innerHTML += `<li> ${doc.data().Title} </li>`;
+                movieList.innerHTML += `<li> ${doc.data().Title} <select data-movie="${doc.data().Title}" id="ratings">
+                <option value="null" selected>Select Rating</option>
+                <option value="bad">Bad</option>
+                <option value="meh">Meh</option>
+                <option value="pretty-good">Pretty Good</option>
+                <option value="great">Great</option>
+                <option value="masterpiece">Masterpiece</option>
+                </select>
             }
-            
         });
     });
+    setTimeout(() =>{
+        ratingDropDowns = document.querySelectorAll("#ratings");
+        ratingDropDowns.forEach(menu => menu.addEventListener('change', rate));
+    },750);
 }
+generateMovieList();
 
 ///////////////////////// ADD MOVIES ///////////////////////////////////////////
 const addMovieButton = document.querySelector("#add-movie-submit");
@@ -48,5 +63,15 @@ function addMovie(){
 
 addMovieButton.addEventListener("click", addMovie);
 
+/////////////////////////// RATING SYSTEM ////////////////////////////////
 
-generateMovieList();
+
+
+function rate(e){
+    const movie = this.dataset.movie;
+    db.collection("Movies").doc(movie).update({
+        watched: true,
+        rating: `${this.value}`
+    })
+    generateMovieList()
+}
