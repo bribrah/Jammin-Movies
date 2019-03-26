@@ -26,7 +26,7 @@ function appendUnwatchedMovieList(movieTitle){
 }
 
 function appendWatchedMovieList(movieTitle, rating){
-    watchedMovies.innerHTML += `<div class="${rating} watched-movie" data-movieWatched="${movieTitle}" watched-movie"> ${movieTitle} <button id="unwatch" data-movie="${movieTitle}">Unwatch/Rate</button></div>`;
+    watchedMovies.querySelector(`.${rating}-container`).innerHTML += `<div class="${rating} watched-movie" data-movieWatched="${movieTitle}" watched-movie"> ${movieTitle} <button id="unwatch" data-movie="${movieTitle}">Unwatch/Rate</button></div>`;
     generateEventListeners();
 
 }
@@ -69,13 +69,11 @@ const watchedMovies = document.querySelector(".watched-movies");
 let ratingDropDowns = document.querySelectorAll("#ratings");
 
 function generateMovieList(){
-    movieList.innerHTML= "";
-    watchedMovies.innerHTML = ""
     console.log(isMobileDevice);
     const movies = db.collection("Movies").get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
             if (doc.data().watched == true){
-                watchedMovies.innerHTML += `<div class="${doc.data().rating} watched-movie" data-movieWatched="${doc.data().Title}" watched-movie"> ${doc.data().Title} <button id="unwatch" data-movie="${doc.data().Title}" disabled=true>Unwatch/Rate</button></div>`;
+                watchedMovies.querySelector(`.${doc.data().rating}-container`).innerHTML += `<div class="${doc.data().rating} watched-movie" data-movieWatched="${doc.data().Title}" watched-movie"> ${doc.data().Title} <button id="unwatch" data-movie="${doc.data().Title}" disabled=true>Unwatch/Rate</button></div>`;
                 }
             else{
                 movieList.innerHTML += `<li data-movieUnwatched="${doc.data().Title}"> ${doc.data().Title} <select data-movie="${doc.data().Title}" id="ratings" disabled=true>
@@ -148,7 +146,8 @@ function unrate(e){
         Title: movie
     })
     const listElement = watchedMovies.querySelector(`[data-movieWatched="${movie}"]`);
+    const rating = listElement.classList[0];
     console.log(listElement);
-    watchedMovies.removeChild(listElement);
+    watchedMovies.querySelector(`.${rating}-container`).removeChild(listElement);
     appendUnwatchedMovieList(movie);
 }
