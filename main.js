@@ -68,6 +68,10 @@ function generateRandom(){
     if (randomClicks > 5){
         alert("JUST PICK A FREAKING MOVIE ALREADY");
         randomNumButton.disabled=true;
+        randomNumButton.style.backgroundImage = "url(pickone.jpeg)";
+        randomNumButton.style.width = "300px";
+        randomNumButton.style.height = "168px";
+        randomNumButton.textContent = "DISABLED";
     }
 }
 randomNumButton.addEventListener("click", generateRandom);
