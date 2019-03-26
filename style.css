@@ -60,7 +60,6 @@ html{
     text-align: center;
 }
 #unwatch{
-    float: right;
     vertical-align: center;
 }
 
@@ -81,14 +80,14 @@ html{
     background-color: red;
 }
 .meh{
-    background-color: yellow;
+    background-color: orange;
 }
 .pretty-good{
-    background-color: darkseagreen
+    background-color: yellow
 }
 .great{
     background-color: greenyellow;
 }
 .masterpiece{
-    background-color: purple;
+    background-color: darkgreen;
 }

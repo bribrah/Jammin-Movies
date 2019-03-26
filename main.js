@@ -11,6 +11,32 @@ function isMobileDevice() {
     || navigator.userAgent.match(/Windows Phone/i))
 }
 
+function appendUnwatchedMovieList(movieTitle){
+    movieList.innerHTML += `<li data-movieUnwatched="${movieTitle}"> ${movieTitle} <select data-movie="${movieTitle}" id="ratings">
+    <option value="null" selected>Select Rating</option>
+    <option value="bad">Bad</option>
+    <option value="meh">Meh</option>
+    <option value="pretty-good">Pretty Good</option>
+    <option value="great">Great</option>
+    <option value="masterpiece">Masterpiece</option>
+    <option value="remove">Remove Movie</option>
+    </select></li>`;
+    
+    generateEventListeners();
+}
+
+function appendWatchedMovieList(movieTitle, rating){
+    watchedMovies.innerHTML += `<div class="${rating} watched-movie" data-movieWatched="${movieTitle}" watched-movie"> ${movieTitle} <button id="unwatch" data-movie="${movieTitle}" style="float:none">Unwatch/Rate</button></div>`;
+    generateEventListeners();
+
+}
+
+function generateEventListeners(){
+    ratingDropDowns = document.querySelectorAll("#ratings");
+    ratingDropDowns.forEach(menu => menu.addEventListener('change', rate));
+    unrateButtons = document.querySelectorAll("#unwatch");
+    unrateButtons.forEach(button => button.addEventListener('click',unrate))
+}
 //////////////////////// RANDOM NUMBER GENERATOR //////////////////////////
 const randomNumButton = document.querySelector("#random");
 const randomNumDisplay = document.querySelector(".rand-gen-display");
@@ -18,9 +44,9 @@ const randomNumDisplay = document.querySelector(".rand-gen-display");
 function generateRandom(){
     const movieListElements = movieList.querySelectorAll("li");
     const size = movieListElements.length;
-
- 
-
+    
+    
+    
     randomNumDisplay.textContent = `${movieListElements[Math.floor(Math.random() * size)].childNodes[0].textContent}`;
 }
 randomNumButton.addEventListener("click", generateRandom);
@@ -38,23 +64,10 @@ function generateMovieList(){
     const movies = db.collection("Movies").get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
             if (doc.data().watched == true){
-                if (isMobileDevice){
-                watchedMovies.innerHTML += `<div class="${doc.data().rating} watched-movie"> ${doc.data().Title} <button id="unwatch" data-movie="${doc.data().Title}" style="float:none">Unwatch/Rate</button></div>`;
+                appendWatchedMovieList(doc.data().Title, doc.data().rating);
                 }
-                else{
-                    watchedMovies.innerHTML += `<div class="${doc.data().rating} watched-movie"> ${doc.data().Title} <button id="unwatch" data-movie="${doc.data().Title}">Unwatch/Rate</button></l>`;
-                }
-            }
             else{
-                movieList.innerHTML += `<li> ${doc.data().Title} <select data-movie="${doc.data().Title}" id="ratings">
-                <option value="null" selected>Select Rating</option>
-                <option value="bad">Bad</option>
-                <option value="meh">Meh</option>
-                <option value="pretty-good">Pretty Good</option>
-                <option value="great">Great</option>
-                <option value="masterpiece">Masterpiece</option>
-                <option value="remove">Remove Movie</option>
-                </select></li>`;
+                appendUnwatchedMovieList(doc.data().Title);
             }
         });
     });
@@ -81,7 +94,7 @@ function addMovie(){
     .then(() => console.log("document written"))
     .catch(() => console.error("doc writing error"));
     addMovieText.value = ""
-    generateMovieList();
+    appendUnwatchedMovieList(movieTitle);
 }
 
 addMovieButton.addEventListener("click", addMovie);
@@ -102,7 +115,10 @@ function rate(e){
             rating: `${this.value}`
         })
     }
-    generateMovieList()
+    const movieListElement = document.querySelector(`[data-movieUnwatched = "${movie}"]`)
+    movieList.removeChild(movieListElement);
+    
+    appendWatchedMovieList(movie, this.value);
 }
 
 function unrate(e){
@@ -111,5 +127,8 @@ function unrate(e){
     db.collection("Movies").doc(movie).set({
         Title: movie
     })
-    generateMovieList();
+    const listElement = watchedMovies.querySelector(`[data-movieWatched="${movie}"]`);
+    console.log(listElement);
+    watchedMovies.removeChild(listElement);
+    appendUnwatchedMovieList(movie);
 }
