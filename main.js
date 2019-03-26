@@ -1,4 +1,16 @@
 const db = firebase.firestore();
+
+//UTILITY
+function isMobileDevice() {
+    return (navigator.userAgent.match(/Android/i)
+    || navigator.userAgent.match(/webOS/i)
+    || navigator.userAgent.match(/iPhone/i)
+    || navigator.userAgent.match(/iPad/i)
+    || navigator.userAgent.match(/iPod/i)
+    || navigator.userAgent.match(/BlackBerry/i)
+    || navigator.userAgent.match(/Windows Phone/i))
+}
+
 //////////////////////// RANDOM NUMBER GENERATOR //////////////////////////
 const randomNumButton = document.querySelector("#random");
 const randomNumDisplay = document.querySelector(".rand-gen-display");
@@ -22,10 +34,16 @@ let ratingDropDowns = document.querySelectorAll("#ratings");
 function generateMovieList(){
     movieList.innerHTML= "";
     watchedMovies.innerHTML = ""
+    console.log(isMobileDevice);
     const movies = db.collection("Movies").get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
             if (doc.data().watched == true){
-                watchedMovies.innerHTML += `<li class="${doc.data().rating}"> ${doc.data().Title} </li>`;
+                if (isMobileDevice){
+                watchedMovies.innerHTML += `<li class="${doc.data().rating}"> ${doc.data().Title} <button id="unwatch" data-movie="${doc.data().Title}" style="float:none">Unwatch/Rate</button></li>`;
+                }
+                else{
+                    watchedMovies.innerHTML += `<li class="${doc.data().rating}"> ${doc.data().Title} <button id="unwatch" data-movie="${doc.data().Title}">Unwatch/Rate</button></li>`;
+                }
             }
             else{
                 movieList.innerHTML += `<li> ${doc.data().Title} <select data-movie="${doc.data().Title}" id="ratings">
@@ -35,6 +53,7 @@ function generateMovieList(){
                 <option value="pretty-good">Pretty Good</option>
                 <option value="great">Great</option>
                 <option value="masterpiece">Masterpiece</option>
+                <option value="remove">Remove Movie</option>
                 </select></li>`;
             }
         });
@@ -42,7 +61,11 @@ function generateMovieList(){
     setTimeout(() =>{
         ratingDropDowns = document.querySelectorAll("#ratings");
         ratingDropDowns.forEach(menu => menu.addEventListener('change', rate));
-    },750);
+        unrateButtons = document.querySelectorAll("#unwatch");
+        unrateButtons.forEach(button => button.addEventListener('click',unrate))
+        console.log(ratingDropDowns);
+        console.log(unrateButtons)
+    },2000);
 }
 generateMovieList();
 
@@ -68,10 +91,25 @@ addMovieButton.addEventListener("click", addMovie);
 
 
 function rate(e){
+    console.log(this.value);
     const movie = this.dataset.movie;
-    db.collection("Movies").doc(movie).update({
-        watched: true,
-        rating: `${this.value}`
-    })
+    if (this.value=="remove"){
+        db.collection("Movies").doc(movie).delete();
+    }
+    else{
+        db.collection("Movies").doc(movie).update({
+            watched: true,
+            rating: `${this.value}`
+        })
+    }
     generateMovieList()
+}
+
+function unrate(e){
+    console.log("test")
+    const movie = this.dataset.movie;
+    db.collection("Movies").doc(movie).set({
+        Title: movie
+    })
+    generateMovieList();
 }
