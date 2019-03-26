@@ -1,6 +1,8 @@
 html{
     margin-right: 5%;
-    margin-left: 5%
+    margin-left: 5%;
+    background-color: aliceblue;
+    padding-bottom: 30px;
 }
 .header{
     text-align: center;
@@ -11,7 +13,7 @@ html{
     font-size: 2em;
     font-weight: bold;
     justify-content: center;
-
+    
 }
 .movie-list{
     flex: 1;
@@ -25,11 +27,31 @@ html{
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
     padding-left: 10px;
     border: 1px solid black;
-
 }
 
 
 .rand-gen{
+    text-align: center;
+}
+#random{
+    background-image: url(popcorn.png);
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    /* put the height and width of your image here */
+    height: 230px;
+    width: 230px;
+    border: none;
+    color:white;
+    font-weight: bold;
+    font-size: 2em;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+#random:hover {
+    cursor: pointer;
+}
+.movie-add{
     text-align: center;
 }
 
