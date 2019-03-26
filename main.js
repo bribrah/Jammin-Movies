@@ -52,14 +52,23 @@ function generate(){
 //////////////////////// RANDOM NUMBER GENERATOR //////////////////////////
 const randomNumButton = document.querySelector("#random");
 const randomNumDisplay = document.querySelector(".rand-gen-display");
+let randomClicks = 0;
 
 function generateRandom(){
     const movieListElements = movieList.querySelectorAll("li");
     const size = movieListElements.length;
+    if (randomClicks == 0){
+        randomNumDisplay.innerHTML = "";
+    }
     
     
     
-    randomNumDisplay.textContent = `${movieListElements[Math.floor(Math.random() * size)].childNodes[0].textContent}`;
+    randomNumDisplay.innerHTML += `<div class="random-movie">${movieListElements[Math.floor(Math.random() * size)].childNodes[0].textContent}</div>`;
+    randomClicks++;
+    if (randomClicks > 5){
+        alert("JUST PICK A FREAKING MOVIE ALREADY");
+        randomNumButton.disabled=true;
+    }
 }
 randomNumButton.addEventListener("click", generateRandom);
 
