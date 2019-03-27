@@ -46,6 +46,8 @@ html{
     background-image: url(popcorn.png);
     background-repeat: no-repeat;
     background-position: 50% 50%;
+    box-shadow: 4px 4px 5px black;
+    border-radius: 230px;
     /* put the height and width of your image here */
     height: 230px;
     width: 230px;
@@ -57,8 +59,15 @@ html{
     word-wrap: break-word;
     overflow-wrap: break-word;
 }
+#random:focus {
+    outline:0;
+}
+
 #random:hover {
     cursor: pointer;
+}
+#random:active{
+    box-shadow: none;
 }
 .movie-add{
     text-align: center;
