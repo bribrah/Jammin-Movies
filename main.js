@@ -44,6 +44,7 @@ useButton.addEventListener('click', generate);
 function generate(){
     let cat = window.prompt();
     if (cat == "suhdood"){
+        generateEventListeners();
         addMovieButton.disabled = false;
         document.querySelectorAll("button").forEach(button => button.disabled=false);
         ratingDropDowns.forEach(menu => menu.disabled=false);
@@ -101,13 +102,6 @@ function generateMovieList(){
             }
         });
     });
-    setTimeout(() =>{
-        ratingDropDowns = document.querySelectorAll("#ratings");
-        ratingDropDowns.forEach(menu => menu.addEventListener('change', rate));
-        unrateButtons = document.querySelectorAll("#unwatch");
-        unrateButtons.forEach(button => button.addEventListener('click',unrate));
-        useButton.disabled = false;
-    },2000);
 }
 generateMovieList();
 
