@@ -1,4 +1,6 @@
 const db = firebase.firestore();
+let netflixTitles= [];
+let allMovies = []
 
 /////////////////////////////////UTILITY///////////////////////////////////////////////////////////////////////
 function isMobileDevice() {
@@ -11,6 +13,34 @@ function isMobileDevice() {
     || navigator.userAgent.match(/Windows Phone/i))
 }
 
+
+document.getElementById('file').onchange = function(){
+    const reader = new FileReader()
+    const file = this.files[0]
+    reader.onload = function(progressEvent){
+      // Entire file
+      console.log(this.result);
+  
+      // By lines
+      var lines = this.result.split('\n');
+      for(var line = 0; line < lines.length; line++){
+        netflixTitles.push(lines[line]);
+      }
+    };
+    reader.readAsText(file);
+    console.log(netflixtTitles)
+  };
+
+  function isOnNetflix(){
+    allMovies.forEach(movie =>{
+        if (netflixTitles.indexOf(movie) > -1){
+            db.collection("Movies").doc(movie).update({
+                onNetflix: true
+            })
+        }
+    })
+  }
+  
 function appendUnwatchedMovieList(movieTitle){
     movieList.innerHTML += `<li data-movieUnwatched="${movieTitle}"> ${movieTitle} <select data-movie="${movieTitle}" id="ratings">
     <option value="null" selected>Select Rating</option>
@@ -86,10 +116,23 @@ function generateMovieList(){
     console.log(isMobileDevice);
     const movies = db.collection("Movies").get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
+            allMovies.push(doc.data().Title);
             if (doc.data().watched == true){
                 watchedMovies.querySelector(`.${doc.data().rating}-container`).innerHTML += `<div class="${doc.data().rating} watched-movie" data-movieWatched="${doc.data().Title}" watched-movie"> ${doc.data().Title} <button id="unwatch" data-movie="${doc.data().Title}" disabled=true>Unwatch/Rate</button></div>`;
                 }
             else{
+                if (doc.data().onNetflix == true){
+                    movieList.innerHTML += `<li data-movieUnwatched="${doc.data().Title}"> ${doc.data().Title} <select data-movie="${doc.data().Title}" id="ratings" disabled=true>
+                <option value="null" selected>Select Rating</option>
+                <option value="bad">Bad</option>
+                <option value="meh">Meh</option>
+                <option value="pretty-good">Pretty Good</option>
+                <option value="great">Great</option>
+                <option value="masterpiece">Masterpiece</option>
+                <option value="remove">Remove Movie</option>
+                </select>
+                <img src="netflix-icon.png" class="stream-icon"></li>`;
+                }
                 movieList.innerHTML += `<li data-movieUnwatched="${doc.data().Title}"> ${doc.data().Title} <select data-movie="${doc.data().Title}" id="ratings" disabled=true>
                 <option value="null" selected>Select Rating</option>
                 <option value="bad">Bad</option>

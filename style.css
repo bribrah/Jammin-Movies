@@ -16,6 +16,11 @@ html{
     justify-content: center;
     
 }
+.stream-icon{
+    width: 28px;
+    height: auto;
+    vertical-align: bottom
+}
 .movie-list{
     flex: 1;
     justify-content: center;
