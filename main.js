@@ -1,6 +1,12 @@
+//  TODO ADD LISTENER FOR STREAMABLE ONLY BOX AND FIX THE RANDOM BUTTON FOR
+
+
 const db = firebase.firestore();
 let netflixTitles= [];
-let allMovies = []
+let huluTitles= [];
+let amazonTitles = [];
+let streamableMovies = []
+let allMovies = [];
 
 /////////////////////////////////UTILITY///////////////////////////////////////////////////////////////////////
 function isMobileDevice() {
@@ -14,33 +20,139 @@ function isMobileDevice() {
 }
 
 
-document.getElementById('file').onchange = function(){
-    const reader = new FileReader()
-    const file = this.files[0]
-    reader.onload = function(progressEvent){
-      // Entire file
-      console.log(this.result);
-  
-      // By lines
-      var lines = this.result.split('\n');
-      for(var line = 0; line < lines.length; line++){
-        netflixTitles.push(lines[line]);
-      }
+/////////////////////////////////////////////////////////////// STREAMING STUFFF ////////////////////////////////////////////////////////
+    document.getElementById('huluFile').onchange = function(){
+        const reader = new FileReader()
+        const file = this.files[0]
+        reader.onload = function(progressEvent){
+            // Entire file
+            console.log(this.result);
+            
+            // By lines
+            var lines = this.result.split('\n');
+            for(var line = 0; line < lines.length; line++){
+                huluTitles.push(lines[line].toLowerCase());
+            }
+        };
+        reader.readAsText(file);
+        isOnHulu();
     };
-    reader.readAsText(file);
-    console.log(netflixtTitles)
-  };
+    
+    document.getElementById('netflixFile').onchange = function(){
+        const reader = new FileReader()
+        const file = this.files[0]
+        reader.onload = function(progressEvent){
+            // Entire file
+            console.log(this.result);
+            
+            // By lines
+            var lines = this.result.split('\n');
+            for(var line = 0; line < lines.length; line++){
+                netflixTitles.push(lines[line].toLowerCase());
+            }
+        };
+        reader.readAsText(file);
+        isOnNetflix();
+    };
 
-  function isOnNetflix(){
+    document.getElementById('amazonFile').onchange = function(){
+        const reader = new FileReader()
+        const file = this.files[0]
+        reader.onload = function(progressEvent){
+            // Entire file
+            console.log(this.result);
+            
+            // By lines
+            var lines = this.result.split('\n');
+            for(var line = 0; line < lines.length; line++){
+                amazonTitles.push(lines[line].toLowerCase());
+            }
+        };
+        reader.readAsText(file);
+        isOnAmazon();
+    };
+
+function isOnNetflix(){
     allMovies.forEach(movie =>{
-        if (netflixTitles.indexOf(movie) > -1){
+        if (netflixTitles.indexOf(movie.toLowerCase()) > -1){
             db.collection("Movies").doc(movie).update({
                 onNetflix: true
-            })
+            });
         }
-    })
-  }
-  
+        else{
+            db.collection("Movies").doc(movie).update({
+                onNetflix: false
+            });
+        }
+    });
+    generateMovieList();
+}
+
+function isOnHulu(){
+    allMovies.forEach(movie =>{
+        if (huluTitles.indexOf(movie.toLowerCase()) > -1){
+            db.collection("Movies").doc(movie).update({
+                onHulu: true
+            });
+        }
+        else{
+            db.collection("Movies").doc(movie).update({
+                onHulu: false
+            });
+        }
+    });
+    generateMovieList();
+}
+function isOnAmazon(){
+    allMovies.forEach(movie =>{
+        if (amazonTitles.indexOf(movie.toLowerCase()) > -1){
+            db.collection("Movies").doc(movie).update({
+                onAmazon: true
+            });
+        }
+        else{
+            db.collection("Movies").doc(movie).update({
+                onAmazon: false
+            });
+        }
+    });
+    generateMovieList();
+}
+
+function appendStreaming(movie){
+    let append= "";
+    const onNetflix = movie.data().onNetflix
+    const onHulu = movie.data().onHulu
+    const onAmazon = movie.data().onAmazon
+    if ((onNetflix || onHulu || onAmazon) && !movie.data().watched){
+        streamableMovies.push(movie.data().Title)
+    }
+    if (onNetflix){
+        append += " <img src='netflix-icon.png' class='stream-icon'>"
+    }
+    if(onHulu){
+        append += "<img src='hulu-icon.png' class='stream-icon'>"
+    }
+    if(onAmazon){
+        append += "<img src='amazon-icon.png' class='stream-icon'>"
+    }
+    return append;function appendStreaming(movie){
+        let append= "";
+        const onNetflix = movie.data().onNetflix
+        const onHulu = movie.data().onHulu
+        if ((onNetflix || onHulu) && !movie.data().watched){
+            streamableMovies.push(movie.data().Title)
+        }
+        if (onNetflix){
+            append += " <img src='netflix-icon.png' class='stream-icon'>"
+        }
+        if(onHulu){
+            append += "<img src='hulu-icon.png' class='stream-icon'>"
+        }
+        return append;
+    }
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function appendUnwatchedMovieList(movieTitle){
     movieList.innerHTML += `<li data-movieUnwatched="${movieTitle}"> ${movieTitle} <select data-movie="${movieTitle}" id="ratings">
     <option value="null" selected>Select Rating</option>
@@ -56,10 +168,11 @@ function appendUnwatchedMovieList(movieTitle){
 }
 
 function appendWatchedMovieList(movieTitle, rating){
-    watchedMovies.querySelector(`.${rating}-container`).innerHTML += `<div class="${rating} watched-movie" data-movieWatched="${movieTitle}" watched-movie"> ${movieTitle} <button id="unwatch" data-movie="${movieTitle}">Unwatch/Rate</button></div>`;
+    watchedMovies.querySelector(`.${rating}-container`).innerHTML += `<div class="${rating} watched-movie" data-movieWatched="${movieTitle}
+    " watched-movie"> ${movieTitle} <button id="unwatch" data-movie="${movieTitle}">Unwatch/Rate</button></div>`;
     generateEventListeners();
-
 }
+
 
 function generateEventListeners(){
     ratingDropDowns = document.querySelectorAll("#ratings");
@@ -83,18 +196,22 @@ function generate(){
 //////////////////////// RANDOM NUMBER GENERATOR //////////////////////////
 const randomNumButton = document.querySelector("#random");
 const randomNumDisplay = document.querySelector(".rand-gen-display");
+const streamableCheckbox = document.querySelector("#stream-only")
 let randomClicks = 0;
 
 function generateRandom(){
     const movieListElements = movieList.querySelectorAll("li");
-    const size = movieListElements.length;
     if (randomClicks == 0){
         randomNumDisplay.innerHTML = "";
     }
-    
-    
-    
-    randomNumDisplay.innerHTML += `<div class="random-movie">${movieListElements[Math.floor(Math.random() * size)].childNodes[0].textContent}</div>`;
+    if (streamableCheckbox.checked == true){
+        const size = streamableMovies.length;
+        randomNumDisplay.innerHTML+= `<div class="random-movie">${streamableMovies[Math.floor(Math.random() * size)]}</div>`;
+    }
+    else{
+        const size = movieListElements.length;
+        randomNumDisplay.innerHTML += `<div class="random-movie">${movieListElements[Math.floor(Math.random() * size)].childNodes[0].textContent}</div>`;
+    }
     randomClicks++;
     if (randomClicks > 5){
         alert("JUST PICK A FREAKING MOVIE ALREADY");
@@ -118,11 +235,11 @@ function generateMovieList(){
         querySnapshot.forEach(function(doc) {
             allMovies.push(doc.data().Title);
             if (doc.data().watched == true){
-                watchedMovies.querySelector(`.${doc.data().rating}-container`).innerHTML += `<div class="${doc.data().rating} watched-movie" data-movieWatched="${doc.data().Title}" watched-movie"> ${doc.data().Title} <button id="unwatch" data-movie="${doc.data().Title}" disabled=true>Unwatch/Rate</button></div>`;
-                }
+                watchedMovies.querySelector(`.${doc.data().rating}-container`).innerHTML += `<div class="${doc.data().rating} watched-movie" data-movieWatched="${doc.data().Title}
+                " watched-movie"> ${doc.data().Title} ${appendStreaming(doc)}<button id="unwatch" data-movie="${doc.data().Title}" disabled=true>Unwatch/Rate</button></div>`;
+            }
             else{
-                if (doc.data().onNetflix == true){
-                    movieList.innerHTML += `<li data-movieUnwatched="${doc.data().Title}"> ${doc.data().Title} <select data-movie="${doc.data().Title}" id="ratings" disabled=true>
+                movieList.innerHTML += `<li data-movieUnwatched="${doc.data().Title}"> ${doc.data().Title} ${appendStreaming(doc)} <select data-movie="${doc.data().Title}" id="ratings" disabled=true>
                 <option value="null" selected>Select Rating</option>
                 <option value="bad">Bad</option>
                 <option value="meh">Meh</option>
@@ -131,20 +248,10 @@ function generateMovieList(){
                 <option value="masterpiece">Masterpiece</option>
                 <option value="remove">Remove Movie</option>
                 </select>
-                <img src="netflix-icon.png" class="stream-icon"></li>`;
-                }
-                movieList.innerHTML += `<li data-movieUnwatched="${doc.data().Title}"> ${doc.data().Title} <select data-movie="${doc.data().Title}" id="ratings" disabled=true>
-                <option value="null" selected>Select Rating</option>
-                <option value="bad">Bad</option>
-                <option value="meh">Meh</option>
-                <option value="pretty-good">Pretty Good</option>
-                <option value="great">Great</option>
-                <option value="masterpiece">Masterpiece</option>
-                <option value="remove">Remove Movie</option>
-                </select></li>`;
+                </li>`;
             }
-        });
-    });
+        })
+    })
 }
 generateMovieList();
 

@@ -16,8 +16,11 @@ html{
     justify-content: center;
     
 }
+.stream-only{
+    margin-top: 10px;
+}
 .stream-icon{
-    width: 28px;
+    width: 35px;
     height: auto;
     vertical-align: bottom
 }

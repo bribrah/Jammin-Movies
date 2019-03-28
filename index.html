@@ -22,7 +22,10 @@
     </script>
 </head>
 <body>
-        <input type="file" name="file" id="file">
+        <input type="file" name="file" id="netflixFile" hidden>
+        <input type="file" name="file" id="huluFile" hidden>
+        <input type="file" name="file" id="amazonFile" hidden>
+
 
     <div class="header">
         <h1>Jammin Movies</h1>
@@ -31,6 +34,10 @@
 
     <div class="rand-gen">
         <button name="random" id="random">Random Movie Generator</button>
+        <div class="stream-only">
+            <input type="checkbox" id="stream-only">Streamable Only
+
+        </div>
         <h2 class="rand-gen-display">Click Button Above to Choose a Random Unwatched Movie</h2>
     </div>
     <button class="login">Login to Enable Changes</button>
@@ -71,6 +78,6 @@
 
 
 
-    <script src="main.js"></script>
+    <script src="compressed.js"></script>
 </body>
 </html>
