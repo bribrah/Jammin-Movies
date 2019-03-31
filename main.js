@@ -1,10 +1,7 @@
-//  TODO ADD LISTENER FOR STREAMABLE ONLY BOX AND FIX THE RANDOM BUTTON FOR
+//  TODO BROKE STREAMING INTEGRATION, NOT APPENDING LISTS!!!!
 
 
 const db = firebase.firestore();
-let netflixTitles= [];
-let huluTitles= [];
-let amazonTitles = [];
 let streamableMovies = []
 let allMovies = [];
 
@@ -19,105 +16,51 @@ function isMobileDevice() {
     || navigator.userAgent.match(/Windows Phone/i))
 }
 
+function streamCheckAll(){
+    allMovies.forEach(movie => {
+        streamCheck(movie);
+    })
+}
+
+
 
 /////////////////////////////////////////////////////////////// STREAMING STUFFF ////////////////////////////////////////////////////////
-    document.getElementById('huluFile').onchange = function(){
-        const reader = new FileReader()
-        const file = this.files[0]
-        reader.onload = function(progressEvent){
-            // Entire file
-            console.log(this.result);
-            
-            // By lines
-            var lines = this.result.split('\n');
-            for(var line = 0; line < lines.length; line++){
-                huluTitles.push(lines[line].toLowerCase());
-            }
-        };
-        reader.readAsText(file);
-        isOnHulu();
-    };
+function streamCheck(movie){
+    if (huluTitles.indexOf(movie.toLowerCase()) > -1){
+        db.collection("Movies").doc(movie).update({
+            onHulu: true
+        });
+    }
+    else{
+        db.collection("Movies").doc(movie).update({
+            onHulu: false
+        });
+    }
     
-    document.getElementById('netflixFile').onchange = function(){
-        const reader = new FileReader()
-        const file = this.files[0]
-        reader.onload = function(progressEvent){
-            // Entire file
-            console.log(this.result);
-            
-            // By lines
-            var lines = this.result.split('\n');
-            for(var line = 0; line < lines.length; line++){
-                netflixTitles.push(lines[line].toLowerCase());
-            }
-        };
-        reader.readAsText(file);
-        isOnNetflix();
-    };
-
-    document.getElementById('amazonFile').onchange = function(){
-        const reader = new FileReader()
-        const file = this.files[0]
-        reader.onload = function(progressEvent){
-            // Entire file
-            console.log(this.result);
-            
-            // By lines
-            var lines = this.result.split('\n');
-            for(var line = 0; line < lines.length; line++){
-                amazonTitles.push(lines[line].toLowerCase());
-            }
-        };
-        reader.readAsText(file);
-        isOnAmazon();
-    };
-
-function isOnNetflix(){
-    allMovies.forEach(movie =>{
-        if (netflixTitles.indexOf(movie.toLowerCase()) > -1){
-            db.collection("Movies").doc(movie).update({
-                onNetflix: true
-            });
-        }
-        else{
-            db.collection("Movies").doc(movie).update({
-                onNetflix: false
-            });
-        }
-    });
-    generateMovieList();
+    if (amazonTitles.indexOf(movie.toLowerCase()) > -1){
+        console.log("TEST");
+        db.collection("Movies").doc(movie).update({
+            onAmazon: true
+        });
+    }
+    else{
+        db.collection("Movies").doc(movie).update({
+            onAmazon: false
+        });
+    }
+    
+    if (netflixTitles.indexOf(movie.toLowerCase()) > -1){
+        db.collection("Movies").doc(movie).update({
+            onNetflix: true
+        });
+    }
+    else{
+        db.collection("Movies").doc(movie).update({
+            onNetflix: false
+        });
+    }
 }
 
-function isOnHulu(){
-    allMovies.forEach(movie =>{
-        if (huluTitles.indexOf(movie.toLowerCase()) > -1){
-            db.collection("Movies").doc(movie).update({
-                onHulu: true
-            });
-        }
-        else{
-            db.collection("Movies").doc(movie).update({
-                onHulu: false
-            });
-        }
-    });
-    generateMovieList();
-}
-function isOnAmazon(){
-    allMovies.forEach(movie =>{
-        if (amazonTitles.indexOf(movie.toLowerCase()) > -1){
-            db.collection("Movies").doc(movie).update({
-                onAmazon: true
-            });
-        }
-        else{
-            db.collection("Movies").doc(movie).update({
-                onAmazon: false
-            });
-        }
-    });
-    generateMovieList();
-}
 
 function appendStreaming(movie){
     let append= "";
@@ -136,35 +79,27 @@ function appendStreaming(movie){
     if(onAmazon){
         append += "<img src='amazon-icon.png' class='stream-icon'>"
     }
-    return append;function appendStreaming(movie){
-        let append= "";
-        const onNetflix = movie.data().onNetflix
-        const onHulu = movie.data().onHulu
-        if ((onNetflix || onHulu) && !movie.data().watched){
-            streamableMovies.push(movie.data().Title)
-        }
-        if (onNetflix){
-            append += " <img src='netflix-icon.png' class='stream-icon'>"
-        }
-        if(onHulu){
-            append += "<img src='hulu-icon.png' class='stream-icon'>"
-        }
-        return append;
-    }
+    return append;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function appendUnwatchedMovieList(movieTitle){
-    movieList.innerHTML += `<li data-movieUnwatched="${movieTitle}"> ${movieTitle} <select data-movie="${movieTitle}" id="ratings">
-    <option value="null" selected>Select Rating</option>
-    <option value="bad">Bad</option>
-    <option value="meh">Meh</option>
-    <option value="pretty-good">Pretty Good</option>
-    <option value="great">Great</option>
-    <option value="masterpiece">Masterpiece</option>
-    <option value="remove">Remove Movie</option>
-    </select></li>`;
-    
-    generateEventListeners();
+    streamCheck(movieTitle)
+    const docRef = db.collection("Movies").doc(movieTitle);
+    docRef.get().then(doc=>{
+        console.log(doc.data())
+        movieList.innerHTML += `<li data-movieUnwatched="${movieTitle}"> ${movieTitle} <select data-movie="${movieTitle}" id="ratings">
+        <option value="null" selected>Select Rating</option>
+        <option value="bad">Bad</option>
+        <option value="meh">Meh</option>
+        <option value="pretty-good">Pretty Good</option>
+        <option value="great">Great</option>
+        <option value="masterpiece">Masterpiece</option>
+        <option value="remove">Remove Movie</option>
+        </select>${appendStreaming(doc)}</li>`;
+        
+        
+        generateEventListeners();
+    })
 }
 
 function appendWatchedMovieList(movieTitle, rating){
@@ -233,13 +168,15 @@ function generateMovieList(){
     console.log(isMobileDevice);
     const movies = db.collection("Movies").get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
-            allMovies.push(doc.data().Title);
+            const title = doc.data().Title;
+            allMovies.push(title);
             if (doc.data().watched == true){
-                watchedMovies.querySelector(`.${doc.data().rating}-container`).innerHTML += `<div class="${doc.data().rating} watched-movie" data-movieWatched="${doc.data().Title}
-                " watched-movie"> ${doc.data().Title} ${appendStreaming(doc)}<button id="unwatch" data-movie="${doc.data().Title}" disabled=true>Unwatch/Rate</button></div>`;
+                const rating = doc.data().rating;
+                watchedMovies.querySelector(`.${rating}-container`).innerHTML += `<div class="${rating} watched-movie" data-movieWatched="${title}
+                " watched-movie"> ${title} ${appendStreaming(doc)}<button id="unwatch" data-movie="${title}" disabled=true>Unwatch/Rate</button></div>`;
             }
             else{
-                movieList.innerHTML += `<li data-movieUnwatched="${doc.data().Title}"> ${doc.data().Title} ${appendStreaming(doc)} <select data-movie="${doc.data().Title}" id="ratings" disabled=true>
+                movieList.innerHTML += `<li data-movieUnwatched="${title}"> ${title} ${appendStreaming(doc )} <select data-movie="${title}" id="ratings" disabled=true>
                 <option value="null" selected>Select Rating</option>
                 <option value="bad">Bad</option>
                 <option value="meh">Meh</option>

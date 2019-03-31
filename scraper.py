@@ -2,25 +2,25 @@ from bs4 import BeautifulSoup
 import requests
 import time
 ########################## NETFLIX #######################
-# netflixLibraryURL = "https://www.finder.com/netflix-movies"
+netflixLibraryURL = "https://www.finder.com/netflix-movies"
 
-# pageResponse = requests.get(netflixLibraryURL, timeout=5)
+pageResponse = requests.get(netflixLibraryURL, timeout=5)
 
-# pageContent = BeautifulSoup(pageResponse.content, "html.parser")
+pageContent = BeautifulSoup(pageResponse.content, "html.parser")
 
-# titleList = open("netflixtitles.txt", "w")
-# titleList.write("")
-# titleList.close()
+titleList = open("netflixtitles.txt", "w")
+titleList.write("")
+titleList.close()
 
-# titleList = open("netflixtitles.txt" , "a")
+titleList = open("netflixtitles.txt" , "a")
 
-# titleArray = pageContent.find_all("b");
+titleArray = pageContent.find_all("b");
 
 
-# for title in titleArray:
-#     titleList.write(title.text)
-#     titleList.write("\n")
-# titleList.close()
+for title in titleArray:
+    titleList.write(title.text)
+    titleList.write(",")
+titleList.close()
 ############### HULU #################
 titleList = open("hulutitles.txt", "w")
 titleList.write("")
@@ -38,7 +38,7 @@ for i in range(0,75):
 
 for title in titleArray:
     titleList.write(title)
-    titleList.write("\n")
+    titleList.write(",")
 titleList.close()
 
 ################### AMAZON #####################
@@ -58,6 +58,6 @@ for i in range(0,264):
 
 for title in titleArray:
     titleList.write(title)
-    titleList.write("\n")
+    titleList.write(",")
 titleList.close()
 
