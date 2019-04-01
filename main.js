@@ -1,4 +1,3 @@
-//  TODO BROKE STREAMING INTEGRATION, NOT APPENDING LISTS!!!!
 
 
 const db = firebase.firestore();
@@ -6,6 +5,13 @@ let streamableMovies = []
 let allMovies = [];
 
 /////////////////////////////////UTILITY///////////////////////////////////////////////////////////////////////
+
+function generateEventListeners(){
+    ratingDropDowns = document.querySelectorAll("#ratings");
+    ratingDropDowns.forEach(menu => menu.addEventListener('change', rate));
+    unrateButtons = document.querySelectorAll("#unwatch");
+    unrateButtons.forEach(button => button.addEventListener('click',unrate))
+}
 function isMobileDevice() {
     return (navigator.userAgent.match(/Android/i)
     || navigator.userAgent.match(/webOS/i)
@@ -16,15 +22,15 @@ function isMobileDevice() {
     || navigator.userAgent.match(/Windows Phone/i))
 }
 
+
+
+
+/////////////////////////////////////////////////////////////// STREAMING STUFFF ////////////////////////////////////////////////////////
 function streamCheckAll(){
     allMovies.forEach(movie => {
         streamCheck(movie);
     })
 }
-
-
-
-/////////////////////////////////////////////////////////////// STREAMING STUFFF ////////////////////////////////////////////////////////
 function streamCheck(movie){
     if (huluTitles.indexOf(movie.toLowerCase()) > -1){
         db.collection("Movies").doc(movie).update({
@@ -38,7 +44,6 @@ function streamCheck(movie){
     }
     
     if (amazonTitles.indexOf(movie.toLowerCase()) > -1){
-        console.log("TEST");
         db.collection("Movies").doc(movie).update({
             onAmazon: true
         });
@@ -81,7 +86,7 @@ function appendStreaming(movie){
     }
     return append;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////MOVIE LIST APPEND//////////////////////////////////////////////////////////////////////////////////////////////////////
 function appendUnwatchedMovieList(movieTitle){
     streamCheck(movieTitle)
     const docRef = db.collection("Movies").doc(movieTitle);
@@ -109,14 +114,7 @@ function appendWatchedMovieList(movieTitle, rating){
 }
 
 
-function generateEventListeners(){
-    ratingDropDowns = document.querySelectorAll("#ratings");
-    ratingDropDowns.forEach(menu => menu.addEventListener('change', rate));
-    unrateButtons = document.querySelectorAll("#unwatch");
-    unrateButtons.forEach(button => button.addEventListener('click',unrate))
-}
-
-
+///////////////////////////////////////////////////////////LOGIN////////////////////////////////////////////////////////////////////////
 const useButton = document.querySelector(".login");
 useButton.addEventListener('click', generate);
 function generate(){
@@ -234,7 +232,6 @@ function rate(e){
 }
 
 function unrate(e){
-    console.log("test")
     const movie = this.dataset.movie;
     db.collection("Movies").doc(movie).set({
         Title: movie
