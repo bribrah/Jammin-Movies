@@ -92,7 +92,7 @@ function appendUnwatchedMovieList(movieTitle){
     const docRef = db.collection("Movies").doc(movieTitle);
     docRef.get().then(doc=>{
         console.log(doc.data())
-        movieList.innerHTML += `<li data-movieUnwatched="${movieTitle}"> ${movieTitle} <select data-movie="${movieTitle}" id="ratings">
+        movieList.innerHTML += `<li data-movieUnwatched="${movieTitle}"> ${movieTitle} ${appendStreaming(doc)} <select data-movie="${movieTitle}" id="ratings">
         <option value="null" selected>Select Rating</option>
         <option value="bad">Bad</option>
         <option value="meh">Meh</option>
@@ -100,7 +100,7 @@ function appendUnwatchedMovieList(movieTitle){
         <option value="great">Great</option>
         <option value="masterpiece">Masterpiece</option>
         <option value="remove">Remove Movie</option>
-        </select>${appendStreaming(doc)}</li>`;
+        </select></li>`;
         
         
         generateEventListeners();
