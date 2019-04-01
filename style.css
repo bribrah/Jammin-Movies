@@ -109,12 +109,9 @@ html{
 
   .suggestions li:hover{
       background-color: lightblue;
+      cursor: pointer;
   }
-input[type=submit]{
-    background-color: dodgerblue;
-    color: white;
-    border: 0
-}
+
 
 
 /* RATING CLASSES */
