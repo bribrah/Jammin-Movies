@@ -156,7 +156,56 @@ function generateRandom(){
     }
 }
 randomNumButton.addEventListener("click", generateRandom);
+/////////////////////// AUTOCOMPLETE //////////////////////////////////////////////////////
+const addMovieButton = document.querySelector("#add-movie-submit");
+const addMovieText = document.querySelector("#add-movie")
+const suggestions = document.querySelector(".suggestions")
 
+let lastSuggestionArray = [];
+
+addMovieText.addEventListener('change',displayMatches)
+addMovieText.addEventListener('keyup',displayMatches)
+
+
+function findMatches(wordToMatch, streamableMovies){
+    console.log("test")
+        return streamableMovies.filter(movie => {
+            const regex = new RegExp(wordToMatch, 'gi');
+            return movie.match(regex);
+        });
+}
+
+function displayMatches(e){
+    let matchArray = [];
+    if (e.key =="Backspace" || addMovieText.value.length <= 1){
+        matchArray = findMatches(this.value,allStreamableMovies);
+        
+    }
+    else{
+        matchArray = findMatches(this.value,lastSuggestionArray);
+    }
+    lastSuggestionArray = matchArray;
+    if (matchArray.length < 100){
+        
+        const html = matchArray.map(movie => {
+            const regex = new RegExp(this.value, 'gi');
+            const movieName = movie.replace(regex, `${this.value}`);
+            
+            return `
+            <li class="nameSuggestion">
+            <span>${movieName}</span>
+            </li>
+            `;
+        }).join('');
+        suggestions.innerHTML = html;
+        const titleSuggestions = document.querySelectorAll(".nameSuggestion")
+        titleSuggestions.forEach(suggestion=> suggestion.addEventListener("click", clickedSuggestion));
+    }
+}
+
+function clickedSuggestion(e){
+    addMovieText.value = this.querySelector("span").textContent;
+}
 /////////////////////// MOVIE LIST GENERATOR //////////////////////////////////////////
 const movieList = document.querySelector(".unwatched-movies");
 const watchedMovies = document.querySelector(".watched-movies");
@@ -191,8 +240,6 @@ function generateMovieList(){
 generateMovieList();
 
 ///////////////////////// ADD MOVIES ///////////////////////////////////////////
-const addMovieButton = document.querySelector("#add-movie-submit");
-const addMovieText = document.querySelector("#add-movie")
 
 function addMovie(){
     let movieTitle = addMovieText.value;
