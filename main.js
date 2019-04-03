@@ -139,7 +139,9 @@ function generateRandom(){
     }
     if (streamableCheckbox.checked == true){
         const size = streamableMovies.length;
-        randomNumDisplay.innerHTML+= `<div class="random-movie">${streamableMovies[Math.floor(Math.random() * size)]}</div>`;
+        let randomNum = Math.floor(Math.random() * size)
+        randomNumDisplay.innerHTML+= `<div class="random-movie">${streamableMovies[randomNum]}</div>`;
+        streamableMovies.splice(randomNum,1);
     }
     else{
         const size = movieListElements.length;
@@ -169,10 +171,10 @@ addMovieText.addEventListener('keyup',displayMatches)
 
 function findMatches(wordToMatch, streamableMovies){
     console.log("test")
-        return streamableMovies.filter(movie => {
-            const regex = new RegExp(wordToMatch, 'gi');
-            return movie.match(regex);
-        });
+    return streamableMovies.filter(movie => {
+        const regex = new RegExp(wordToMatch, 'gi');
+        return movie.match(regex);
+    });
 }
 
 function displayMatches(e){
