@@ -90,13 +90,13 @@ function appendStreaming(movie){
         streamableMovies.push(movie.title)
     }
     if (onNetflix){
-        append += " <img src='netflix-icon.png' class='stream-icon'>"
+        append += " <img src='images/netflix-icon.png' class='stream-icon'>"
     }
     if(onHulu){
-        append += "<img src='hulu-icon.png' class='stream-icon'>"
+        append += "<img src='images/hulu-icon.png' class='stream-icon'>"
     }
     if(onAmazon){
-        append += "<img src='amazon-icon.png' class='stream-icon'>"
+        append += "<img src='images/amazon-icon.png' class='stream-icon'>"
     }
     return append;
 }
@@ -169,7 +169,7 @@ function generateRandom(){
     if (randomClicks > 5){
         alert("JUST PICK A FREAKING MOVIE ALREADY");
         randomNumButton.disabled=true;
-        randomNumButton.style.backgroundImage = "url(pickone.jpeg)";
+        randomNumButton.style.backgroundImage = "url(images/pickone.jpeg)";
         randomNumButton.style.width = "300px";
         randomNumButton.style.height = "168px";
         randomNumButton.textContent = "DISABLED";
