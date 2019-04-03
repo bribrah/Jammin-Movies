@@ -1,7 +1,8 @@
 
 
 const db = firebase.firestore();
-let streamableMovies = []
+let streamableMovies = [];
+let unwatchedMovies = [];
 let allMovies = [];
 
 /////////////////////////////////UTILITY///////////////////////////////////////////////////////////////////////
@@ -21,6 +22,9 @@ function isMobileDevice() {
     || navigator.userAgent.match(/BlackBerry/i)
     || navigator.userAgent.match(/Windows Phone/i))
 }
+function pullMovieObjOut(movieTitle){
+    return movieObjArray.find(obj => obj.title == movieTitle);
+}
 
 
 
@@ -36,44 +40,54 @@ function streamCheck(movie){
         db.collection("Movies").doc(movie).update({
             onHulu: true
         });
+        pullMovieObjOut(movie).onHulu = true;
     }
     else{
         db.collection("Movies").doc(movie).update({
             onHulu: false
         });
+        pullMovieObjOut(movie).onHulu = false;
+        
     }
     
     if (amazonTitles.indexOf(movie.toLowerCase()) > -1){
         db.collection("Movies").doc(movie).update({
             onAmazon: true
         });
+        pullMovieObjOut(movie).onAmazon = true;
+        
     }
     else{
         db.collection("Movies").doc(movie).update({
             onAmazon: false
         });
+        pullMovieObjOut(movie).onAmazon = false;
     }
     
     if (netflixTitles.indexOf(movie.toLowerCase()) > -1){
         db.collection("Movies").doc(movie).update({
             onNetflix: true
         });
+        pullMovieObjOut(movie).onNetflix = true;
     }
     else{
         db.collection("Movies").doc(movie).update({
             onNetflix: false
         });
+        pullMovieObjOut(movie).onNetflix = false;
     }
+    
 }
 
 
 function appendStreaming(movie){
     let append= "";
-    const onNetflix = movie.data().onNetflix
-    const onHulu = movie.data().onHulu
-    const onAmazon = movie.data().onAmazon
-    if ((onNetflix || onHulu || onAmazon) && !movie.data().watched){
-        streamableMovies.push(movie.data().Title)
+    const movieObj= pullMovieObjOut(movie);
+    const onNetflix = movie.onNetflix;
+    const onHulu = movie.onHulu;
+    const onAmazon = movie.onAmazon;
+    if ((onNetflix || onHulu || onAmazon) && !movie.watched){
+        streamableMovies.push(movie.title)
     }
     if (onNetflix){
         append += " <img src='netflix-icon.png' class='stream-icon'>"
@@ -88,23 +102,23 @@ function appendStreaming(movie){
 }
 /////////////////////////////////////////////////MOVIE LIST APPEND//////////////////////////////////////////////////////////////////////////////////////////////////////
 function appendUnwatchedMovieList(movieTitle){
-    streamCheck(movieTitle)
-    const docRef = db.collection("Movies").doc(movieTitle);
-    docRef.get().then(doc=>{
-        console.log(doc.data())
-        movieList.innerHTML += `<li data-movieUnwatched="${movieTitle}"> ${movieTitle} <select data-movie="${movieTitle}" id="ratings">
-        <option value="null" selected>Select Rating</option>
-        <option value="bad">Bad</option>
-        <option value="meh">Meh</option>
-        <option value="pretty-good">Pretty Good</option>
-        <option value="great">Great</option>
-        <option value="masterpiece">Masterpiece</option>
-        <option value="remove">Remove Movie</option>
-        </select>${appendStreaming(doc)}</li>`;
-        
-        
-        generateEventListeners();
-    })
+    movieObj = {
+        title: movieTitle
+    }
+    movieObjArray.push(movieObj);
+    streamCheck(movieTitle);
+    movieList.innerHTML += `<li data-movieUnwatched="${movieTitle}"> ${movieTitle} <select data-movie="${movieTitle}" id="ratings">
+    <option value="null" selected>Select Rating</option>
+    <option value="bad">Bad</option>
+    <option value="meh">Meh</option>
+    <option value="pretty-good">Pretty Good</option>
+    <option value="great">Great</option>
+    <option value="masterpiece">Masterpiece</option>
+    <option value="remove">Remove Movie</option>
+    </select>${appendStreaming(pullMovieObjOut(movieTitle))}</li>`;
+    
+    
+    generateEventListeners();
 }
 
 function appendWatchedMovieList(movieTitle, rating){
@@ -133,17 +147,23 @@ const streamableCheckbox = document.querySelector("#stream-only")
 let randomClicks = 0;
 
 function generateRandom(){
-    const movieListElements = movieList.querySelectorAll("li");
     if (randomClicks == 0){
         randomNumDisplay.innerHTML = "";
     }
     if (streamableCheckbox.checked == true){
         const size = streamableMovies.length;
-        randomNumDisplay.innerHTML+= `<div class="random-movie">${streamableMovies[Math.floor(Math.random() * size)]}</div>`;
+        const randomNum = Math.floor(Math.random() * size);
+        const title = streamableMovies[randomNum];
+        streamableMovies.splice(randomNum,1);
+        randomNumDisplay.innerHTML+= `<div class="random-movie">${title}${appendStreaming(pullMovieObjOut(title))}</div>`;
     }
     else{
-        const size = movieListElements.length;
-        randomNumDisplay.innerHTML += `<div class="random-movie">${movieListElements[Math.floor(Math.random() * size)].childNodes[0].textContent}</div>`;
+        const size = unwatchedMovies.length;
+        const randomNum = Math.floor(Math.random() * size);
+        const title = unwatchedMovies[randomNum];
+        unwatchedMovies.splice(randomNum,1);
+        randomNumDisplay.innerHTML+= `<div class="random-movie">${title}${appendStreaming(pullMovieObjOut(title))}</div>`;
+        
     }
     randomClicks++;
     if (randomClicks > 5){
@@ -169,10 +189,10 @@ addMovieText.addEventListener('keyup',displayMatches)
 
 function findMatches(wordToMatch, streamableMovies){
     console.log("test")
-        return streamableMovies.filter(movie => {
-            const regex = new RegExp(wordToMatch, 'gi');
-            return movie.match(regex);
-        });
+    return streamableMovies.filter(movie => {
+        const regex = new RegExp(wordToMatch, 'gi');
+        return movie.match(regex);
+    });
 }
 
 function displayMatches(e){
@@ -210,20 +230,30 @@ function clickedSuggestion(e){
 const movieList = document.querySelector(".unwatched-movies");
 const watchedMovies = document.querySelector(".watched-movies");
 let ratingDropDowns = document.querySelectorAll("#ratings");
+let movieObjArray = []
 
 function generateMovieList(){
-    console.log(isMobileDevice);
     const movies = db.collection("Movies").get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
-            const title = doc.data().Title;
+            movieObj ={
+                title: doc.data().Title,
+                watched: doc.data().watched,
+                rating: doc.data().rating,
+                onHulu: doc.data().onHulu,
+                onAmazon: doc.data().onAmazon,
+                onNetflix: doc.data().onNetflix
+            };
+            movieObjArray.push(movieObj);
+            const title = movieObj.title;
             allMovies.push(title);
-            if (doc.data().watched == true){
-                const rating = doc.data().rating;
-                watchedMovies.querySelector(`.${rating}-container`).innerHTML += `<div class="${rating} watched-movie" data-movieWatched="${title}
-                " watched-movie"> ${title} ${appendStreaming(doc)}<button id="unwatch" data-movie="${title}" disabled=true>Unwatch/Rate</button></div>`;
+            if (movieObj.watched == true){
+                const rating = movieObj.rating;
+                watchedMovies.querySelector(`.${rating}-container`).innerHTML += `<div class="${rating} watched-movie" data-movieWatched="${title}">
+                ${title} ${appendStreaming(movieObj)}<button id="unwatch" data-movie="${title}" disabled=true>Unwatch/Rate</button></div>`;
             }
             else{
-                movieList.innerHTML += `<li data-movieUnwatched="${title}"> ${title} ${appendStreaming(doc )} <select data-movie="${title}" id="ratings" disabled=true>
+                unwatchedMovies.push(title);
+                movieList.innerHTML += `<li data-movieUnwatched="${title}"> ${title} ${appendStreaming(movieObj)} <select data-movie="${title}" id="ratings" disabled=true>
                 <option value="null" selected>Select Rating</option>
                 <option value="bad">Bad</option>
                 <option value="meh">Meh</option>
@@ -233,6 +263,7 @@ function generateMovieList(){
                 <option value="remove">Remove Movie</option>
                 </select>
                 </li>`;
+                
             }
         })
     })
@@ -283,7 +314,7 @@ function unrate(e){
     db.collection("Movies").doc(movie).set({
         Title: movie
     })
-    const listElement = watchedMovies.querySelector(`[data-movieWatched="${movie}"]`);
+    const listElement = watchedMovies.querySelector(`[data-moviewatched="${movie}"]`);
     const rating = listElement.classList[0];
     console.log(listElement);
     watchedMovies.querySelector(`.${rating}-container`).removeChild(listElement);
