@@ -51,12 +51,20 @@ function generateMovieList(selectedList){
 ///////////////////////////////////////////////////////////// LIST SELECT STUFF//////////////////////////////////////////////////////////////////////////////////////////
 
 const listSelect = document.querySelector("#list-select")
+const listSelectContainer = document.querySelector(".list-select");
 let movieListArray = []
 let currentList;
 
 
 function populateListSelect(){
     listSelect.innerHTML = "";
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = "DeleteList"
+    deleteButton.classList = "list-delete-button"
+
+    listSelectContainer.appendChild(deleteButton);
+    document.querySelector(".list-delete-button").addEventListener('click',deleteList)
+    
     movieListArray = currentUserObject.movie_list_array
     movieListArray.forEach(list =>{
         let optionNode = document.createElement('option');
@@ -70,6 +78,15 @@ function populateListSelect(){
     listSelect.appendChild(addNewNode);
 }
 
+function deleteList(){
+    movieListArray.splice(movieListArray.indexOf(listSelect.value));
+    db.collection(currentUserEmail).doc("movie_lists").set({
+        movie_list_array: movieListArray
+    })
+    listSelectContainer.removeChild(document.querySelector(".list-delete-button"))
+    populateListSelect()
+    generateMovieList(listSelect.value)
+}
 function createNewList(){
     const newListName = prompt("What would you like to name your list?")
     listSelect.removeChild(listSelect.lastChild);
@@ -99,12 +116,12 @@ function createNewList(){
 }
 
 function changeList(){
+    movieObjArray = []
+    movieList.innerHTML = "";
+    streamableMovies = [];
+    unwatchedMovies = [];
+    allMovies = [];
     if (listSelect.value != "Create new List"){
-        movieObjArray = []
-        movieList.innerHTML = "";
-        streamableMovies = [];
-        unwatchedMovies = [];
-        allMovies = [];
         currentList = listSelect.value;
         generateMovieList(currentList);
     }
