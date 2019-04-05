@@ -6,6 +6,12 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 import requests
 import time
+
+################## SELENIUM SETUP ###################
+
+
+
+
 ########################## NETFLIX #######################
 print("starting netflix")
 netflixLibraryURL = "https://www.finder.com/netflix-movies"
