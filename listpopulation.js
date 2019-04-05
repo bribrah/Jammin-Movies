@@ -8,11 +8,7 @@ let unwatchedMovies = [];
 let allMovies = [];
 
 function generateMovieList(selectedList){
-    movieObjArray = []
-    movieList.innerHTML = "";
-    streamableMovies = [];
-    unwatchedMovies = [];
-    allMovies = [];
+    
     document.querySelectorAll(".rating-container").forEach(container => container.innerHTML = "")
     const movies = db.collection(selectedList).get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
@@ -76,10 +72,12 @@ function populateListSelect(){
 
 function createNewList(){
     const newListName = prompt("What would you like to name your list?")
-        listSelect.removeChild(listSelect.lastChild);
-        db.collection(newListName).doc("Movie Filler you can Remove").set({
-            Title: "Movie filler please remove"
-        }).then(() =>{
+    listSelect.removeChild(listSelect.lastChild);
+    db.collection(newListName).doc("Movie Filler you can Remove").set({
+        Title: "Movie Filler you can Remove"
+    }).then(() =>{
+        db.collection(newListName).doc("Movie Filler you can Remove").delete().then(()=> {
+            
             movieListArray.push(newListName);
             db.collection(currentUserEmail).doc("movie_lists").set({
                 movie_list_array: movieListArray
@@ -96,10 +94,17 @@ function createNewList(){
                 generateMovieList(newListName);
             })
         })
+    })
+    
 }
 
 function changeList(){
     if (listSelect.value != "Create new List"){
+        movieObjArray = []
+        movieList.innerHTML = "";
+        streamableMovies = [];
+        unwatchedMovies = [];
+        allMovies = [];
         currentList = listSelect.value;
         generateMovieList(currentList);
     }

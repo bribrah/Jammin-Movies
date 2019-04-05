@@ -17,22 +17,28 @@ import time
 #         driver.find_element(By.XPATH,  "//a[@id='netflixlist_next' and not(@disabled)]").click()
 ########################## NETFLIX #######################
 print("starting netflix")
-netflixLibraryURL = "https://www.finder.com/netflix-movies"
+netflixLibraryURL = "https://reelgood.com/movies/source/netflix?offset=0"
 
 pageResponse = requests.get(netflixLibraryURL, timeout=5)
 
 pageContent = BeautifulSoup(pageResponse.content, "html.parser")
 
-titleList = open("Web scraper/netflixtitles.txt", "w")
+titleList = open("Web scraper/netflixtitles.txt" , "w")
 titleList.write("")
 titleList.close()
 
 titleList = open("Web scraper/netflixtitles.txt" , "a")
+titleArray = []
 
-titleArray = pageContent.find_all("b");
-
+for i in range(0,100):
+    netflixLibraryURL = "https://reelgood.com/movies/source/netflix?offset=" + str(i*50)
+    pageResponse = requests.get(netflixLibraryURL, timeout=5)
+    pageContent = BeautifulSoup(pageResponse.content, "html.parser")
+    titleContainerArray = pageContent.find_all("td", "c5")
+    for container in titleContainerArray:
+        titleArray.append(container.find("a").text)
 for title in titleArray:
-    titleList.write(title.text)
+    titleList.write(title)
     titleList.write(",")
 titleList.close()
 print("netflix done")
@@ -44,7 +50,7 @@ titleList.close()
 titleList = open("Web scraper/hulutitles.txt", "a")
 titleArray = []
 
-for i in range(0,75):
+for i in range(0,100):
     huluLibraryURL = "https://reelgood.com/source/hulu?filter-sort=4&offset=" + str(i*50)
     pageResponse = requests.get(huluLibraryURL, timeout=5)
     pageContent = BeautifulSoup(pageResponse.content, "html.parser")

@@ -108,20 +108,12 @@ function login(){
     firebase.auth().signInWithEmailAndPassword(window.prompt("Please enter your email"), window.prompt("Please enter your password")).then(()=>{
         currentUser = firebase.auth().currentUser
         if (currentUser){
-            if (currentUser.email == "baespinosa@ucdavis.edu" || currentUserEmail.email == "cheesemas46@gmail.com"){
-                currentUserEmail = "Movies"
-            }
-            else{
                 currentUserEmail = currentUser.email
             }
             createUserObject();
             console.log("user logged in")
             addMovieButton.disabled = false;
-        }
-        
-        
-        
-    }).catch(function(error) {
+        }).catch(function(error) {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
