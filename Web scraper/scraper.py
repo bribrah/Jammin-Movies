@@ -3,15 +3,18 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By 
 from selenium.webdriver.support.ui import WebDriverWait 
 from selenium.webdriver.support import expected_conditions as EC 
+from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import TimeoutException
 import requests
 import time
 
 ################## SELENIUM SETUP ###################
+# driver = webdriver.Chrome()
+# driver.get("https://www.whats-on-netflix.com/library/movies/")
 
-
-
-
+# for i in range (0,124):
+#         WebDriverWait(driver,10).until(EC.presence_of_element_located((By.ID,"netflixlist-next")))
+#         driver.find_element(By.XPATH,  "//a[@id='netflixlist_next' and not(@disabled)]").click()
 ########################## NETFLIX #######################
 print("starting netflix")
 netflixLibraryURL = "https://www.finder.com/netflix-movies"
