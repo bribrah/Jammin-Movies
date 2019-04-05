@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Signup</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css">
+    <link rel="stylesheet" href="accounts.css">
+    <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyC-TNGhKhFtSMicH20PxCHVeauBKDFsITU",
+        authDomain: "jammin-movies.firebaseapp.com",
+        databaseURL: "https://jammin-movies.firebaseio.com",
+        projectId: "jammin-movies",
+        storageBucket: "jammin-movies.appspot.com",
+        messagingSenderId: "203686718902"
+      };
+      firebase.initializeApp(config);
+    </script>
+</head>
+<body>
+    <div class="header">
+        <h1>Account Creation</h1>
+    </div>
+    <div class="signup-errors"></div>
+    <form class="signup-form">
+            <label for="email"> Email </label> 
+            <input class="form-text" type="text" id="email">
+
+            <label for="password">Password</label>
+            <input class="form-text" type="password" id="password">
+
+            <label for="password-conf">Password Confirmation</label>
+            <input class="form-text" type="password" id="password-conf">
+        </div>
+        <input type="submit" id="create-account">
+        
+        <script src="signup.js"></script>
+    </form>
+    </body>
+    </html>

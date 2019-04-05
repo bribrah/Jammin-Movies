@@ -129,16 +129,32 @@ function appendWatchedMovieList(movieTitle, rating){
 
 
 ///////////////////////////////////////////////////////////LOGIN////////////////////////////////////////////////////////////////////////
-const useButton = document.querySelector(".login");
-useButton.addEventListener('click', generate);
+const loginButton = document.querySelector(".login");
+loginButton.addEventListener('click', generate);
+let email = "";
+let password = ""
+let user = firebase.auth().signInWithEmailAndPassword(email,password);
+console.log(user);
 function generate(){
-    let cat = window.prompt();
-    if (cat == "suhdood"){
+    let email = window.prompt("Please enter your email");
+    let password = window.prompt("Please enter your password")
+    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorMessage);
+        
+        // ...
+    });
+    user = firebase.auth().currentUser
+    if (user){
+        console.log("user logged in")
         generateEventListeners();
         addMovieButton.disabled = false;
         document.querySelectorAll("button").forEach(button => button.disabled=false);
         ratingDropDowns.forEach(menu => menu.disabled=false);
     }
+    firebase.auth().signOut()
 }
 //////////////////////// RANDOM NUMBER GENERATOR //////////////////////////
 const randomNumButton = document.querySelector("#random");
