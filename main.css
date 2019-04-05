@@ -5,6 +5,11 @@ html{
     padding-bottom: 30px;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
 }
+
+.list-select{
+    text-align: center;
+}
+
 .header{
     text-align: center;
 }
@@ -43,9 +48,8 @@ html{
     align-items: center;
 }
 
-.login{
-    display: block;
-    margin: auto;
+.login-container{
+    text-align: center;
 }
 .rand-gen{
     text-align: center;

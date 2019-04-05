@@ -1,9 +1,7 @@
 
 
 const db = firebase.firestore();
-let streamableMovies = [];
-let unwatchedMovies = [];
-let allMovies = [];
+
 
 /////////////////////////////////UTILITY///////////////////////////////////////////////////////////////////////
 
@@ -37,13 +35,13 @@ function streamCheckAll(){
 }
 function streamCheck(movie){
     if (huluTitles.indexOf(movie.toLowerCase()) > -1){
-        db.collection("Movies").doc(movie).update({
+        db.collection(currentList).doc(movie).update({
             onHulu: true
         });
         pullMovieObjOut(movie).onHulu = true;
     }
     else{
-        db.collection("Movies").doc(movie).update({
+        db.collection(currentList).doc(movie).update({
             onHulu: false
         });
         pullMovieObjOut(movie).onHulu = false;
@@ -51,27 +49,27 @@ function streamCheck(movie){
     }
     
     if (amazonTitles.indexOf(movie.toLowerCase()) > -1){
-        db.collection("Movies").doc(movie).update({
+        db.collection(currentList).doc(movie).update({
             onAmazon: true
         });
         pullMovieObjOut(movie).onAmazon = true;
         
     }
     else{
-        db.collection("Movies").doc(movie).update({
+        db.collection(currentList).doc(movie).update({
             onAmazon: false
         });
         pullMovieObjOut(movie).onAmazon = false;
     }
     
     if (netflixTitles.indexOf(movie.toLowerCase()) > -1){
-        db.collection("Movies").doc(movie).update({
+        db.collection(currentList).doc(movie).update({
             onNetflix: true
         });
         pullMovieObjOut(movie).onNetflix = true;
     }
     else{
-        db.collection("Movies").doc(movie).update({
+        db.collection(currentList).doc(movie).update({
             onNetflix: false
         });
         pullMovieObjOut(movie).onNetflix = false;
@@ -100,45 +98,30 @@ function appendStreaming(movie){
     }
     return append;
 }
-/////////////////////////////////////////////////MOVIE LIST APPEND//////////////////////////////////////////////////////////////////////////////////////////////////////
-function appendUnwatchedMovieList(movieTitle){
-    movieObj = {
-        title: movieTitle
-    }
-    movieObjArray.push(movieObj);
-    streamCheck(movieTitle);
-    movieList.innerHTML += `<li data-movieUnwatched="${movieTitle}"> ${movieTitle} <select data-movie="${movieTitle}" id="ratings">
-    <option value="null" selected>Select Rating</option>
-    <option value="bad">Bad</option>
-    <option value="meh">Meh</option>
-    <option value="pretty-good">Pretty Good</option>
-    <option value="great">Great</option>
-    <option value="masterpiece">Masterpiece</option>
-    <option value="remove">Remove Movie</option>
-    </select>${appendStreaming(pullMovieObjOut(movieTitle))}</li>`;
-    
-    
-    generateEventListeners();
-}
-
-function appendWatchedMovieList(movieTitle, rating){
-    watchedMovies.querySelector(`.${rating}-container`).innerHTML += `<div class="${rating} watched-movie" data-movieWatched="${movieTitle}
-    " watched-movie"> ${movieTitle} <button id="unwatch" data-movie="${movieTitle}">Unwatch/Rate</button></div>`;
-    generateEventListeners();
-}
-
 
 ///////////////////////////////////////////////////////////LOGIN////////////////////////////////////////////////////////////////////////
 const loginButton = document.querySelector(".login");
-loginButton.addEventListener('click', generate);
-let email = "";
-let password = ""
-let user = firebase.auth().signInWithEmailAndPassword(email,password);
-console.log(user);
-function generate(){
-    let email = window.prompt("Please enter your email");
-    let password = window.prompt("Please enter your password")
-    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+loginButton.addEventListener('click', login);
+let currentUserEmail = "";
+currentUser = firebase.auth().currentUser
+function login(){
+    firebase.auth().signInWithEmailAndPassword(window.prompt("Please enter your email"), window.prompt("Please enter your password")).then(()=>{
+        currentUser = firebase.auth().currentUser
+        if (currentUser){
+            if (currentUser.email == "baespinosa@ucdavis.edu" || currentUserEmail.email == "cheesemas46@gmail.com"){
+                currentUserEmail = "Movies"
+            }
+            else{
+                currentUserEmail = currentUser.email
+            }
+            createUserObject();
+            console.log("user logged in")
+            addMovieButton.disabled = false;
+        }
+        
+        
+        
+    }).catch(function(error) {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
@@ -146,16 +129,21 @@ function generate(){
         
         // ...
     });
-    user = firebase.auth().currentUser
-    if (user){
-        console.log("user logged in")
-        generateEventListeners();
-        addMovieButton.disabled = false;
-        document.querySelectorAll("button").forEach(button => button.disabled=false);
-        ratingDropDowns.forEach(menu => menu.disabled=false);
-    }
-    firebase.auth().signOut()
 }
+let currentUserObject;
+function createUserObject(){
+    db.collection(currentUserEmail).doc("movie_lists").get().then(function(doc){
+        currentUserObject = {
+            email: currentUserEmail,
+            movie_list_array: doc.data().movie_list_array
+        }
+        populateListSelect();
+        changeList();
+        
+        
+    })
+}
+
 //////////////////////// RANDOM NUMBER GENERATOR //////////////////////////
 const randomNumButton = document.querySelector("#random");
 const randomNumDisplay = document.querySelector(".rand-gen-display");
@@ -242,55 +230,13 @@ function displayMatches(e){
 function clickedSuggestion(e){
     addMovieText.value = this.querySelector("span").textContent;
 }
-/////////////////////// MOVIE LIST GENERATOR //////////////////////////////////////////
-const movieList = document.querySelector(".unwatched-movies");
-const watchedMovies = document.querySelector(".watched-movies");
-let ratingDropDowns = document.querySelectorAll("#ratings");
-let movieObjArray = []
 
-function generateMovieList(){
-    const movies = db.collection("Movies").get().then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-            movieObj ={
-                title: doc.data().Title,
-                watched: doc.data().watched,
-                rating: doc.data().rating,
-                onHulu: doc.data().onHulu,
-                onAmazon: doc.data().onAmazon,
-                onNetflix: doc.data().onNetflix
-            };
-            movieObjArray.push(movieObj);
-            const title = movieObj.title;
-            allMovies.push(title);
-            if (movieObj.watched == true){
-                const rating = movieObj.rating;
-                watchedMovies.querySelector(`.${rating}-container`).innerHTML += `<div class="${rating} watched-movie" data-movieWatched="${title}">
-                ${title} ${appendStreaming(movieObj)}<button id="unwatch" data-movie="${title}" disabled=true>Unwatch/Rate</button></div>`;
-            }
-            else{
-                unwatchedMovies.push(title);
-                movieList.innerHTML += `<li data-movieUnwatched="${title}"> ${title} ${appendStreaming(movieObj)} <select data-movie="${title}" id="ratings" disabled=true>
-                <option value="null" selected>Select Rating</option>
-                <option value="bad">Bad</option>
-                <option value="meh">Meh</option>
-                <option value="pretty-good">Pretty Good</option>
-                <option value="great">Great</option>
-                <option value="masterpiece">Masterpiece</option>
-                <option value="remove">Remove Movie</option>
-                </select>
-                </li>`;
-                
-            }
-        })
-    })
-}
-generateMovieList();
 
 ///////////////////////// ADD MOVIES ///////////////////////////////////////////
 
 function addMovie(){
     let movieTitle = addMovieText.value;
-    db.collection("Movies").doc(movieTitle).set({
+    db.collection(currentList).doc(movieTitle).set({
         Title: movieTitle
     })
     .then(() => console.log("document written"))
@@ -309,10 +255,10 @@ function rate(e){
     console.log(this.value);
     const movie = this.dataset.movie;
     if (this.value=="remove"){
-        db.collection("Movies").doc(movie).delete();
+        db.collection(currentList).doc(movie).delete();
     }
     else{
-        db.collection("Movies").doc(movie).update({
+        db.collection(currentList).doc(movie).update({
             watched: true,
             rating: `${this.value}`
         })
@@ -327,7 +273,7 @@ function rate(e){
 
 function unrate(e){
     const movie = this.dataset.movie;
-    db.collection("Movies").doc(movie).set({
+    db.collection(currentList).doc(movie).set({
         Title: movie
     })
     const listElement = watchedMovies.querySelector(`[data-moviewatched="${movie}"]`);

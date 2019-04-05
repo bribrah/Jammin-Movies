@@ -29,6 +29,9 @@
         <h3>A Collection of movies to watch and rate!</h3>
     </div>
 
+    <div class="list-select"><select name="" id="list-select" onchange="changeList()">
+        <option value="">Please login to change list</option>
+    </select></div>
     <div class="rand-gen">
         <button name="random" id="random">Random Movie Generator</button>
         <div class="stream-only">
@@ -37,7 +40,10 @@
         </div>
         <h2 class="rand-gen-display">Click Button Above to Choose a Random Unwatched Movie</h2>
     </div>
-    <button class="login">Login to Enable Changes</button>
+    <div class="login-container">
+        <button class="login">Login</button>
+        <div><a href="signup.html" style="">Sign Up</a></div>
+    </div>
 
     <div class="movie-list-container">
         <ol class="movie-list">
@@ -54,11 +60,11 @@
                 <h4 class="masterpiece">Masterpiece</h4>
             </div>
             <div class = "watched-movies">
-                <div class="masterpiece-container"></div>
-                <div class="great-container"></div>
-                <div class="pretty-good-container"></div>
-                <div class="meh-container"></div>
-                <div class="bad-container"></div>
+                <div class="masterpiece-container rating-container"></div>
+                <div class="great-container rating-container"></div>
+                <div class="pretty-good-container rating-container"></div>
+                <div class="meh-container rating-container"></div>
+                <div class="bad-container rating-container"></div>
             </div>
         </div>
     </div>
@@ -81,5 +87,6 @@
     <script src="streamingJS/huluTitles.js"></script>
     <script src="streamingJS/StreamLibraries.js"></script>
     <script src="main.js"></script>
+    <script src="listpopulation.js"></script>
 </body>
 </html>
