@@ -147,7 +147,7 @@ function createUserObject(){
             email: currentUserEmail,
             movie_list_array: doc.data().movie_list_array
         }
-        loginLinks.innerHTML = "<li id='logout'><a>Logout</a></li>"
+        loginLinks.innerHTML = `<li id='logout'><a>Logout</a></li><li class='current-user-display'>Logged in as: ${currentUserEmail}</li>`
         document.querySelector("#logout").addEventListener('click', logout)
         populateListSelect();
         changeList();

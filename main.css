@@ -18,14 +18,21 @@ html{
     display: inline;
     float: left;
 }
-.navbar li a {
+.navbar li {
     display: block;
     color: white;
     text-align: center;
     padding: 14px 16px;
+    
+}
+.navbar li a{
     text-decoration: none;
+    color: white
 }
 
+li.current-user-display{
+    float: right;
+}
 .navbar li a:hover{
     background-color: #111111;
     cursor: pointer;
