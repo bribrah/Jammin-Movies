@@ -103,7 +103,20 @@ function appendStreaming(movie){
 const loginButton = document.querySelector(".login");
 loginButton.addEventListener('click', login);
 let currentUserEmail = "";
-currentUser = firebase.auth().currentUser
+const loginLinks = document.querySelector("#login-signup");
+firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      currentUser = firebase.auth().currentUser
+      currentUserEmail = currentUser.email 
+      createUserObject();
+      addMovieButton.disabled = false;
+
+
+    } else {
+      console.log("no user signed in")
+    }
+  });
+  
 function login(){
     firebase.auth().signInWithEmailAndPassword(window.prompt("Please enter your email"), window.prompt("Please enter your password")).then(()=>{
         currentUser = firebase.auth().currentUser
@@ -122,6 +135,11 @@ function login(){
         // ...
     });
 }
+function logout(){
+    firebase.auth().signOut().then(()=>{
+        location.reload()
+    })
+}
 let currentUserObject;
 function createUserObject(){
     db.collection(currentUserEmail).doc("movie_lists").get().then(function(doc){
@@ -129,6 +147,8 @@ function createUserObject(){
             email: currentUserEmail,
             movie_list_array: doc.data().movie_list_array
         }
+        loginLinks.innerHTML = "<li id='logout'><a>Logout</a></li>"
+        document.querySelector("#logout").addEventListener('click', logout)
         populateListSelect();
         changeList();
         
