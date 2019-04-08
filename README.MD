@@ -1,3 +1,3 @@
-# A movie List for Jammy and I
-## Has built in rating and random number generator with integration with firebase
-### URL: https://bribrah.github.io/Jammin-Movies/index.html
+# A movie List app
+## Has built in rating and random movie generator with integration with firebase. Allows users to make multiple lists
+### URL: jamminmovies.com
