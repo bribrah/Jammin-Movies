@@ -103,6 +103,10 @@ function createNewList(){
                 addNewNode.appendChild(addNewText);
                 listSelect.appendChild(addNewNode);
                 generateMovieList(newListName);
+                db.collection("list_index").doc(`${newListName}`).set({
+                    name: newListName,
+                    subscribers: 1
+                })
             })
         })
     })
