@@ -14,36 +14,10 @@ function createAccount(){
             
             errorsOutput.textContent = "Account Created."
             db.collection(emailInput.value).doc("movie_lists").set({
-                movie_list_array: [firstList.value]
+                movie_list_array: []
             }).then(() =>{
-                db.collection(newListName).doc("Movie Filler you can Remove").set({
-                    Title: "Movie Filler you can Remove"
-                }).then(() =>{
-                    db.collection(newListName).doc("Movie Filler you can Remove").delete().then(()=> {
-                        
-                        movieListArray.push(newListName);
-                        db.collection(currentUserEmail).doc("movie_lists").set({
-                            movie_list_array: movieListArray
-                        }).then(() => {
-                            let optionNode = document.createElement('option');
-                            let optionText = document.createTextNode(newListName);
-                            optionNode.appendChild(optionText);
-                            listSelect.appendChild(optionNode);
-                            listSelect.value = newListName;
-                            let addNewNode = document.createElement('option');
-                            let addNewText = document.createTextNode("Create new List")
-                            addNewNode.appendChild(addNewText);
-                            listSelect.appendChild(addNewNode);
-                            generateMovieList(newListName);
-                            db.collection("list_index").doc(`${newListName}`).set({
-                                name: newListName,
-                                subscribers: 1
-                            })
-                                    firebase.auth().signInWithEmailAndPassword(emailInput.value, passwordInput.value).then(()=>{
-                                        window.location.href = "index.html";
-                            })
-                        })
-                    })
+                firebase.auth().signInWithEmailAndPassword(emailInput.value, passwordInput.value).then(()=>{
+                    window.location.href = "index.html";
                 })
             })
         }).catch(function(error){
