@@ -1,3 +1,3 @@
-# A movie List app
-## Has built in rating and random movie generator with integration with firebase. Allows users to make multiple lists
+# A Movie List App
+## Has built in rating and random movie generator and integrates google firebase for realtime storage. Allows users to make multiple lists and share lists with others
 ### URL: jamminmovies.com
