@@ -1,0 +1,4 @@
+.list-link:hover{
+    cursor: pointer;
+    color: blue;
+}
