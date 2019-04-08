@@ -119,15 +119,7 @@ firebase.auth().onAuthStateChanged(function(user) {
   });
   
 function login(){
-    firebase.auth().signInWithEmailAndPassword(window.prompt("Please enter your email"), window.prompt("Please enter your password")).then(()=>{
-        currentUser = firebase.auth().currentUser
-        if (currentUser){
-                currentUserEmail = currentUser.email
-            }
-            createUserObject();
-            console.log("user logged in")
-            addMovieButton.disabled = false;
-        }).catch(function(error) {
+    firebase.auth().signInWithEmailAndPassword(window.prompt("Please enter your email"), window.prompt("Please enter your password")).catch(function(error) {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
