@@ -34,45 +34,46 @@ function streamCheckAll(){
     })
 }
 function streamCheck(movie){
-    if (huluTitles.indexOf(movie.toLowerCase()) > -1){
+    movieObj = pullMovieObjOut(movie);
+    if (huluTitles.indexOf(movie.toLowerCase()) > -1 && !movieObj.onHulu){
         db.collection(currentList).doc(movie).update({
             onHulu: true
         });
-        pullMovieObjOut(movie).onHulu = true;
+        movieObj.onHulu = true;
     }
-    else{
+    else if (huluTitles.indexOf(movie.toLowerCase()) == -1 && movieObj.onHulu){
         db.collection(currentList).doc(movie).update({
             onHulu: false
         });
-        pullMovieObjOut(movie).onHulu = false;
+        movieObj.onHulu = false;
         
     }
     
-    if (amazonTitles.indexOf(movie.toLowerCase()) > -1){
+    if (amazonTitles.indexOf(movie.toLowerCase()) > -1 && !movieObj.onAmazon){
         db.collection(currentList).doc(movie).update({
             onAmazon: true
         });
-        pullMovieObjOut(movie).onAmazon = true;
+        movieObj.onAmazon = true;
         
     }
-    else{
+    else if (amazonTitles.indexOf(movie.toLowerCase()) == -1 && movieObj.onAmazon){
         db.collection(currentList).doc(movie).update({
             onAmazon: false
         });
-        pullMovieObjOut(movie).onAmazon = false;
+        movieObj.onAmazon = false;
     }
     
-    if (netflixTitles.indexOf(movie.toLowerCase()) > -1){
+    if (netflixTitles.indexOf(movie.toLowerCase()) > -1 && !movieObj.onNetflix){
         db.collection(currentList).doc(movie).update({
             onNetflix: true
         });
-        pullMovieObjOut(movie).onNetflix = true;
+        movieObj.onNetflix = true;
     }
-    else{
+    else if (netflixTitles.indexOf(movie.toLowerCase()) == -1 && movieObj.onNetflix){
         db.collection(currentList).doc(movie).update({
             onNetflix: false
         });
-        pullMovieObjOut(movie).onNetflix = false;
+        movieObj.onNetflix = false;
     }
     
 }
