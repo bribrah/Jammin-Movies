@@ -8,24 +8,18 @@ let unwatchedMovies = [];
 let allMovies = [];
 
 function generateMovieList(selectedList){
-    
+    const sanitizedEmail = currentUserEmail.replace(".","")
     document.querySelectorAll(".rating-container").forEach(container => container.innerHTML = "")
     const movies = db.collection(selectedList).get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
-            movieObj ={
-                title: doc.data().Title,
-                watched: doc.data().watched,
-                rating: doc.data().rating,
-                onHulu: doc.data().onHulu,
-                onAmazon: doc.data().onAmazon,
-                onNetflix: doc.data().onNetflix
-            };
+            movieObj =doc.data()
+            console.log(movieObj);
             movieObjArray.push(movieObj);
-            const title = movieObj.title;
+            const title = movieObj.Title;
             allMovies.push(title);
             streamCheck(title)
-            if (movieObj.watched == true){
-                const rating = movieObj.rating;
+            const rating = movieObj[sanitizedEmail] || "";
+            if (rating != ""){
                 watchedMovies.querySelector(`.${rating}-container`).innerHTML += `<div class="${rating} watched-movie" data-movieWatched="${title}">
                 ${title} ${appendStreaming(movieObj)}<button id="unwatch" data-movie="${title}" >Unwatch/Rate</button></div>`;
             }

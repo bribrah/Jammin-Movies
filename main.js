@@ -21,7 +21,7 @@ function isMobileDevice() {
     || navigator.userAgent.match(/Windows Phone/i))
 }
 function pullMovieObjOut(movieTitle){
-    return movieObjArray.find(obj => obj.title == movieTitle);
+    return movieObjArray.find(obj => obj.Title == movieTitle);
 }
 
 
@@ -272,8 +272,7 @@ function rate(e){
     }
     else{
         db.collection(currentList).doc(movie).update({
-            watched: true,
-            rating: `${this.value}`
+            [currentUserEmail.replace(".","")]: this.value
         })
     }
     const movieListElement = document.querySelector(`[data-movieUnwatched = "${movie}"]`)
@@ -287,7 +286,7 @@ function rate(e){
 function unrate(e){
     const movie = this.dataset.movie;
     db.collection(currentList).doc(movie).set({
-        Title: movie
+        [currentUserEmail.replace(".","")]: ""
     })
     const listElement = watchedMovies.querySelector(`[data-moviewatched="${movie}"]`);
     const rating = listElement.classList[0];
