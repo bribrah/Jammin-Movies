@@ -13,7 +13,6 @@ function generateMovieList(selectedList){
     const movies = db.collection(selectedList).get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
             movieObj =doc.data()
-            console.log(movieObj);
             movieObjArray.push(movieObj);
             const title = movieObj.Title;
             allMovies.push(title);

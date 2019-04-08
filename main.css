@@ -45,6 +45,7 @@ li.current-user-display{
 .header{
     text-align: center;
     border-bottom: 1px solid black;
+    margin-bottom: 3vh;
 }
 
 .movie-list-container{

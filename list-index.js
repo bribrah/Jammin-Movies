@@ -3,6 +3,14 @@ const db = firebase.firestore();
 let allLists = []
 
 populateListIndex();
+
+function appendSubscribe(){
+    let append =""
+    if (currentUserEmail != ""){
+        append =  "<button class='subscribe'>Subscribe to this list</button>"
+    }
+    return append
+}
 function populateListIndex(){
     display.innerHTML = ""
     db.collection("list_index").get().then(querySnapshot =>{
@@ -16,9 +24,9 @@ function populateListIndex(){
             })
         }
         allLists.forEach(list =>{
-            display.innerHTML+= `<div class='list-node'><a class='list-link'>${list.name}</a>: ${list.subscribers} subscribers </div>`
+            display.innerHTML+= `<div class='list-node'><a class='list-link'><span>${list.name}</span>: ${list.subscribers} subscribers</a>${appendSubscribe()}</div`
         })
-        document.querySelectorAll(".list-link").forEach(link => link.addEventListener('click', ()=>showList(link.textContent)));
+        document.querySelectorAll(".list-link").forEach(link => link.addEventListener('click', ()=>showList(link.querySelector("span").textContent)));
     })
 }
 function showList(listName){
@@ -28,7 +36,7 @@ function showList(listName){
             const movieObj = doc.data()
             display.innerHTML+= `<div>${movieObj.Title}</div>`
         })
-        display.innerHTML += "<div class='back-button'>Back to List Index</div>"
+        display.innerHTML += "<button class='back-button'>Back to List Index</button>"
         document.querySelector(".back-button").addEventListener('click', populateListIndex);
     })
 }
