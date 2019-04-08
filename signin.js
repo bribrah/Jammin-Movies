@@ -40,7 +40,7 @@ function createUserObject(){
         document.querySelector("#logout").addEventListener('click', logout)
         console.log(window.location.pathname)
         
-        if (window.location.pathname == '/index.html'){
+        if (window.location.pathname == '/'){
             console.log("test")
             addMovieButton.disabled = false;
             populateListSelect();
