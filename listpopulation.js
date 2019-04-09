@@ -84,10 +84,10 @@ function deleteList(){
 function createNewList(){
     const newListName = prompt("What would you like to name your list?")
     listSelect.removeChild(listSelect.lastChild);
-    db.collection(newListName).doc("Movie Filler you can Remove").set({
-        Title: "Movie Filler you can Remove"
+    const firstTitle = prompt("What is the first movie you would like to add to this list?")
+    db.collection(newListName).doc(`${firstTitle}`).set({
+        Title: firstTitle
     }).then(() =>{
-        db.collection(newListName).doc("Movie Filler you can Remove").delete().then(()=> {
             
             movieListArray.push(newListName);
             db.collection(currentUserEmail).doc("movie_lists").set({
@@ -107,7 +107,7 @@ function createNewList(){
                     name: newListName,
                     subscribers: 1
                 })
-            })
+            
         })
     })
     
