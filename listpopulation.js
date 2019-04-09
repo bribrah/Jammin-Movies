@@ -16,7 +16,7 @@ function generateMovieList(selectedList){
             movieObjArray.push(movieObj);
             const title = movieObj.Title;
             allMovies.push(title);
-            streamCheck(title)
+            streamCheck(title);
             const rating = movieObj[sanitizedEmail] || "";
             if (rating != ""){
                 watchedMovies.querySelector(`.${rating}-container`).innerHTML += `<div class="${rating} watched-movie" data-movieWatched="${title}">

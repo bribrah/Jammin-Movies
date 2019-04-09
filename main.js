@@ -81,12 +81,11 @@ function streamCheck(movie){
 
 function appendStreaming(movie){
     let append= "";
-    const movieObj= pullMovieObjOut(movie);
     const onNetflix = movie.onNetflix;
     const onHulu = movie.onHulu;
     const onAmazon = movie.onAmazon;
     if ((onNetflix || onHulu || onAmazon) && !movie.watched){
-        streamableMovies.push(movie.title)
+        streamableMovies.push(movie.Title)
     }
     if (onNetflix){
         append += " <img src='images/netflix-icon.png' class='stream-icon'>"
@@ -99,8 +98,6 @@ function appendStreaming(movie){
     }
     return append;
 }
-
-///////////////////////////////////////////////////////////LOGIN////////////////////////////////////////////////////////////////////////
 
 //////////////////////// RANDOM NUMBER GENERATOR //////////////////////////
 const randomNumButton = document.querySelector("#random");
@@ -116,6 +113,7 @@ function generateRandom(){
         const size = streamableMovies.length;
         const randomNum = Math.floor(Math.random() * size);
         const title = streamableMovies[randomNum];
+        console.log(title)
         streamableMovies.splice(randomNum,1);
         randomNumDisplay.innerHTML+= `<div class="random-movie">${title}${appendStreaming(pullMovieObjOut(title))}</div>`;
     }
