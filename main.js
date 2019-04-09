@@ -75,6 +75,9 @@ function streamCheck(movie){
         });
         movieObj.onNetflix = false;
     }
+    if ((movieObj.onNetflix || movieObj.onHulu || movieObj.onAmazon) && !movie.watched){
+        streamableMovies.push(movieObj.Title)
+    }
     
 }
 
@@ -84,9 +87,7 @@ function appendStreaming(movie){
     const onNetflix = movie.onNetflix;
     const onHulu = movie.onHulu;
     const onAmazon = movie.onAmazon;
-    if ((onNetflix || onHulu || onAmazon) && !movie.watched){
-        streamableMovies.push(movie.Title)
-    }
+    
     if (onNetflix){
         append += " <img src='images/netflix-icon.png' class='stream-icon'>"
     }
@@ -115,14 +116,14 @@ function generateRandom(){
         const title = streamableMovies[randomNum];
         console.log(title)
         streamableMovies.splice(randomNum,1);
-        randomNumDisplay.innerHTML+= `<div class="random-movie">${title}${appendStreaming(pullMovieObjOut(title))}</div>`;
+        randomNumDisplay.innerHTML+= `<div class="random-movie"><a href="https://www.rottentomatoes.com/search/?search=${title}" target="_blank">${title}</a>${appendStreaming(pullMovieObjOut(title))}</div>`;
     }
     else{
         const size = unwatchedMovies.length;
         const randomNum = Math.floor(Math.random() * size);
         const title = unwatchedMovies[randomNum];
         unwatchedMovies.splice(randomNum,1);
-        randomNumDisplay.innerHTML+= `<div class="random-movie">${title}${appendStreaming(pullMovieObjOut(title))}</div>`;
+        randomNumDisplay.innerHTML+= `<div class="random-movie"><a href="https://www.rottentomatoes.com/search/?search=${title}" target="_blank">${title}</a>${appendStreaming(pullMovieObjOut(title))}</div>`;
         
     }
     randomClicks++;
