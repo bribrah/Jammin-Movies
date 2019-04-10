@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=1">
+    <title>Jammin Movies</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css">
+    <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyC-TNGhKhFtSMicH20PxCHVeauBKDFsITU",
+        authDomain: "jammin-movies.firebaseapp.com",
+        databaseURL: "https://jammin-movies.firebaseio.com",
+        projectId: "jammin-movies",
+        storageBucket: "jammin-movies.appspot.com",
+        messagingSenderId: "203686718902"
+      };
+      firebase.initializeApp(config);
+    </script>
+</head>
+<body>
+    <ul class="navbar">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="lists-index.html">All Lists Index</a></li>
+            <div id="login-signup">
+                <li><a class="login">Login</a></li>
+                <li><a href="signup.html" style="">Sign Up</a></li>
+            </div>
+
+    </ul>
+
+    <div class="header">
+        <h1>Jammin Movies</h1>
+        <h3>A Collection of movies to watch and rate!</h3>
+    </div>
+
+    <div class="list-select"><select name="" id="list-select" onchange="changeList()">
+        <option value="">Please login to change list</option>
+    </select></div>
+    <div class="rand-gen">
+        <button name="random" id="random">Random Movie Generator</button>
+        <div class="stream-only">
+            <input type="checkbox" id="stream-only">Streamable Only
+
+        </div>
+        <h2 class="rand-gen-display">Click Button Above to Choose a Random Unwatched Movie</h2>
+    </div>
+    
+
+    <div class="movie-list-container">
+        <ol class="movie-list">
+            <h3 style="margin-top:5px">Unwatched Movies:</h3>
+            <div class="unwatched-movies"></div>
+        </ol>
+        <div class = "watched-movie-list">
+            <h3>Watched Movies:</h3>
+            <div class="rating-legend">
+                <h4 class="bad">Bad</h4>
+                <h4 class="meh">Mehhh</h4>
+                <h4 class="pretty-good">Pretty Good</h4>
+                <h4 class="great">Great</h4>
+                <h4 class="masterpiece">Masterpiece</h4>
+            </div>
+            <div class = "watched-movies">
+                <div class="masterpiece-container rating-container"></div>
+                <div class="great-container rating-container"></div>
+                <div class="pretty-good-container rating-container"></div>
+                <div class="meh-container rating-container"></div>
+                <div class="bad-container rating-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="movie-add">
+        <h3>Add a New Movie:</h3>
+        <div class="auto-complete">
+            <input type="text" id="add-movie">
+            <input type="submit" name="movie-submit" id="add-movie-submit" disabled =true>
+            <ul class="suggestions"></ul>
+        </div>
+    </div>
+    
+
+
+
+
+    <script src="streamingJS/amazonTitles.js"></script>
+    <script src="streamingJS/netflixTitles.js"></script>
+    <script src="streamingJS/huluTitles.js"></script>
+    <script src="streamingJS/StreamLibraries.js"></script>
+    <script src="main.js"></script>
+    <script src = "signin.js"></script>
+    <script src="listpopulation.js"></script>
+</body>
+</html>

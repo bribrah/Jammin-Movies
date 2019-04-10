@@ -1,5 +1,4 @@
 const display = document.querySelector(".list-index");
-const db = firebase.firestore();
 let allLists = []
 
 populateListIndex();

@@ -2,6 +2,8 @@ const loginButton = document.querySelector(".login");
 loginButton.addEventListener('click', login);
 let currentUserEmail = "";
 const loginLinks = document.querySelector("#login-signup");
+const db = firebase.firestore();
+
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         currentUser = firebase.auth().currentUser
@@ -36,11 +38,11 @@ function createUserObject(){
             email: currentUserEmail,
             movie_list_array: doc.data().movie_list_array
         }
-        loginLinks.innerHTML = `<li id='logout'><a>Logout</a></li><li class='current-user-display'>Logged in as: ${currentUserEmail}</li>`
+        loginLinks.innerHTML = `<li><a href="list.html">My Lists</a></li><li id='logout'><a>Logout</a></li><li class='current-user-display'>Logged in as: ${currentUserEmail}</li>`
         document.querySelector("#logout").addEventListener('click', logout)
         console.log(window.location.pathname)
         
-        if (window.location.pathname == '/' || window.location.pathname == "/index.html" || window.location.pathname == "/home/brian/Desktop/bribrah_coding/web-projects/jammin-movies/index.html"){
+        if (window.location.pathname == "/list.html" || window.location.pathname == "/home/brian/Desktop/bribrah_coding/web-projects/jammin-movies/list.html"){
             console.log("test")
             addMovieButton.disabled = false;
             populateListSelect();
