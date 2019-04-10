@@ -20,10 +20,34 @@ function isMobileDevice() {
     || navigator.userAgent.match(/Windows Phone/i))
 }
 function pullMovieObjOut(movieTitle){
-    return movieObjArray.find(obj => obj.Title == movieTitle);
+    return movieObjArray.find(obj => obj.title == movieTitle);
 }
 
-
+function updateMoviesList(){
+    let movieObjs = [];
+    db.collection("Movies").get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            let obj;
+            if (doc.data().rating){
+                obj = {
+                    title: doc.data().Title,
+                    rating: doc.data().rating
+                }
+            }
+            else{
+                obj = {
+                    title: doc.data().Title,
+                }
+            }
+            movieObjs.push(obj)
+        })
+        db.collection("cheesemas46@gmail.com").doc("Movies").update({
+            movieObjArray: movieObjs
+        })
+    })
+    
+    
+}
 
 
 /////////////////////////////////////////////////////////////// STREAMING STUFFF ////////////////////////////////////////////////////////
@@ -35,43 +59,25 @@ function streamCheckAll(){
 function streamCheck(movie){
     movieObj = pullMovieObjOut(movie);
     if (huluTitles.indexOf(movie.toLowerCase()) > -1 && !movieObj.onHulu){
-        db.collection(currentList).doc(movie).update({
-            onHulu: true
-        });
         movieObj.onHulu = true;
     }
     else if (huluTitles.indexOf(movie.toLowerCase()) == -1 && movieObj.onHulu){
-        db.collection(currentList).doc(movie).update({
-            onHulu: false
-        });
         movieObj.onHulu = false;
         
     }
     
     if (amazonTitles.indexOf(movie.toLowerCase()) > -1 && !movieObj.onAmazon){
-        db.collection(currentList).doc(movie).update({
-            onAmazon: true
-        });
         movieObj.onAmazon = true;
         
     }
     else if (amazonTitles.indexOf(movie.toLowerCase()) == -1 && movieObj.onAmazon){
-        db.collection(currentList).doc(movie).update({
-            onAmazon: false
-        });
         movieObj.onAmazon = false;
     }
     
     if (netflixTitles.indexOf(movie.toLowerCase()) > -1 && !movieObj.onNetflix){
-        db.collection(currentList).doc(movie).update({
-            onNetflix: true
-        });
         movieObj.onNetflix = true;
     }
     else if (netflixTitles.indexOf(movie.toLowerCase()) == -1 && movieObj.onNetflix){
-        db.collection(currentList).doc(movie).update({
-            onNetflix: false
-        });
         movieObj.onNetflix = false;
     }
     if ((movieObj.onNetflix || movieObj.onHulu || movieObj.onAmazon) && !movie.watched){
@@ -192,13 +198,13 @@ function clickedSuggestion(e){
 
 function addMovie(){
     let movieTitle = addMovieText.value;
-    db.collection(currentList).doc(movieTitle).set({
-        Title: movieTitle
+    appendUnwatchedMovieList(movieTitle);
+    db.collection(currentUserEmail).doc(currentList).update({
+        movieObjArray: movieObjArray
     })
     .then(() => console.log("document written"))
     .catch(() => console.error("doc writing error"));
     addMovieText.value = ""
-    appendUnwatchedMovieList(movieTitle);
 }
 
 addMovieButton.addEventListener("click", addMovie);
@@ -210,12 +216,18 @@ addMovieButton.addEventListener("click", addMovie);
 function rate(e){
     console.log(this.value);
     const movie = this.dataset.movie;
+    
+    
     if (this.value=="remove"){
-        db.collection(currentList).doc(movie).delete();
+        movieObjArray.splice(movieObjArray[movieObjArray.findIndex(obj => obj.title == movie)],1)
+        db.collection(currentUserEmail).doc(currentList).update({
+            
+        });
     }
     else{
-        db.collection(currentList).doc(movie).update({
-            [currentUserEmail.replace(".","")]: this.value
+        movieObjArray[movieObjArray.findIndex(obj => obj.title == movie)].rating = this.value;
+        db.collection(currentUserEmail).doc(currentList).update({
+            movieObjArray: movieObjArray
         })
     }
     const movieListElement = document.querySelector(`[data-movieUnwatched = "${movie}"]`)
@@ -228,8 +240,9 @@ function rate(e){
 
 function unrate(e){
     const movie = this.dataset.movie;
-    db.collection(currentList).doc(movie).set({
-        [currentUserEmail.replace(".","")]: ""
+    movieObjArray[movieObjArray.findIndex(obj => obj.title == movie)].rating = "";
+    db.collection(currentUserEmail).doc(currentList).update({
+        movieObjArray: movieObjArray
     })
     const listElement = watchedMovies.querySelector(`[data-moviewatched="${movie}"]`);
     const rating = listElement.classList[0];
