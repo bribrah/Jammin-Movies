@@ -74,13 +74,16 @@ function populateListSelect(){
 }
 
 function deleteList(){
-    movieListArray.splice(movieListArray.indexOf(listSelect.value));
-    db.collection(currentUserEmail).doc("movie_lists").set({
-        movie_list_array: movieListArray
-    })
-    listSelectContainer.removeChild(document.querySelector(".list-delete-button"))
-    populateListSelect()
-    generateMovieList(listSelect.value)
+    const conf = prompt(`Please type ${currentList} to confirm deletion.`)
+    if (conf == currentList){
+        movieListArray.splice(movieListArray.indexOf(listSelect.value));
+        db.collection(currentUserEmail).doc("movie_lists").set({
+            movie_list_array: movieListArray
+        })
+        listSelectContainer.removeChild(document.querySelector(".list-delete-button"))
+        populateListSelect()
+        generateMovieList(listSelect.value)
+    }
 }
 function createNewList(){
     const newListName = prompt("What would you like to name your list?")
@@ -105,6 +108,7 @@ function createNewList(){
             optionNode.appendChild(optionText);
             listSelect.appendChild(optionNode);
             listSelect.value = newListName;
+            currentList = newListName;
             let addNewNode = document.createElement('option');
             let addNewText = document.createTextNode("Create new List")
             addNewNode.appendChild(addNewText);

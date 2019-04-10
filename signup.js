@@ -17,7 +17,7 @@ function createAccount(){
                 movie_list_array: []
             }).then(() =>{
                 firebase.auth().signInWithEmailAndPassword(emailInput.value, passwordInput.value).then(()=>{
-                    window.location.href = "index.html";
+                    window.location.href = "list.html";
                 })
             })
         }).catch(function(error){
