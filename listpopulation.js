@@ -143,6 +143,7 @@ function appendUnwatchedMovieList(movieTitle){
     movieObj = {
         title: movieTitle
     }
+    unwatchedMovies.push(movieTitle);
     movieObjArray.push(movieObj);
     streamCheck(movieTitle);
     movieList.innerHTML += `<li data-movieUnwatched="${movieTitle}"> ${movieTitle} <select data-movie="${movieTitle}" id="ratings">
