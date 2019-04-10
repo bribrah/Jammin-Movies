@@ -80,8 +80,8 @@ function streamCheck(movie){
     else if (netflixTitles.indexOf(movie.toLowerCase()) == -1 && movieObj.onNetflix){
         movieObj.onNetflix = false;
     }
-    if ((movieObj.onNetflix || movieObj.onHulu || movieObj.onAmazon) && !movie.watched){
-        streamableMovies.push(movieObj.Title)
+    if ((movieObj.onNetflix || movieObj.onHulu || movieObj.onAmazon) && (!movieObj.rating || movieObj.rating == "")){
+        streamableMovies.push(movieObj.title)
     }
     
 }
@@ -214,14 +214,13 @@ addMovieButton.addEventListener("click", addMovie);
 
 
 function rate(e){
-    console.log(this.value);
     const movie = this.dataset.movie;
     
     
     if (this.value=="remove"){
-        movieObjArray.splice(movieObjArray[movieObjArray.findIndex(obj => obj.title == movie)],1)
+        movieObjArray.splice(movieObjArray.findIndex(obj => obj.title == movie),1)
         db.collection(currentUserEmail).doc(currentList).update({
-            
+            movieObjArray: movieObjArray
         });
     }
     else{

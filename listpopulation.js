@@ -12,6 +12,9 @@ function generateMovieList(selectedList){
     document.querySelectorAll(".rating-container").forEach(container => container.innerHTML = "")
     db.collection(currentUserEmail).doc(selectedList).get().then((doc)=>{
         movieObjArray = doc.data().movieObjArray;
+        movieObjArray.sort((a,b) =>{
+            return a.title>b.title ? 1:-1
+        })
         console.log(movieObjArray)
         movieObjArray.forEach(movieObj =>{
             const title = movieObj.title
