@@ -8,16 +8,29 @@ firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         currentUser = firebase.auth().currentUser
         currentUserEmail = currentUser.email 
+        if (sessionStorage.getItem("loggedIn") != "true"){
+            sessionStorage.setItem("loggedIn","true")
+            sessionStorage.setItem("email",currentUserEmail);
+            changeNavBar();
+        }
         createUserObject();
         
         
     } else {
+        window.sessionStorage.setItem("loggedIn","false")
         console.log("no user signed in")
     }
 });
 
+if (sessionStorage.getItem('loggedIn') == "true"){
+    changeNavBar();
+}
+function changeNavBar(){
+    loginLinks.innerHTML = `<li><a href="list.html">My Lists</a></li><li id='logout'><a>Logout</a></li><li class='current-user-display'>Logged in as: ${sessionStorage.getItem("email")}</li>`
+    document.querySelector("#logout").addEventListener('click', logout)
+}
 function login(){
-    firebase.auth().signInWithEmailAndPassword(window.prompt("Please enter your email"), window.prompt("Please enter your password")).catch(function(error) {
+    firebase.auth().signInWithEmailAndPassword(window.prompt("Please enter your email"), window.prompt("Please enter your password")).then(()=>changeNavBar()).catch(function(error) {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
@@ -28,6 +41,8 @@ function login(){
 }
 function logout(){
     firebase.auth().signOut().then(()=>{
+        sessionStorage.setItem("loggedIn",false)
+        sessionStorage.removeItem("email");
         location.reload()
     })
 }
@@ -38,8 +53,6 @@ function createUserObject(){
             email: currentUserEmail,
             movie_list_array: doc.data().movie_list_array
         }
-        loginLinks.innerHTML = `<li><a href="list.html">My Lists</a></li><li id='logout'><a>Logout</a></li><li class='current-user-display'>Logged in as: ${currentUserEmail}</li>`
-        document.querySelector("#logout").addEventListener('click', logout)
         console.log(window.location.pathname)
         
         if (window.location.pathname == "/list.html" || window.location.pathname == "/home/brian/Desktop/bribrah_coding/web-projects/jammin-movies/list.html"){
