@@ -1,0 +1,12 @@
+HOME PAGE:
+1. Change color Scheme
+2. Format tet so that takes up whole PAGE
+
+CORE:
+Email Verification?
+1. Get rid of all prompts.
+
+LISTS:
+1. Make autocomplete list change when you click on a autocomplete
+2. Dont ask for first movie when making a new list
+3. Fix: Rate -> unRate not showing on page

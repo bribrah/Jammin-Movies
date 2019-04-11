@@ -88,12 +88,8 @@ function deleteList(){
 function createNewList(){
     const newListName = prompt("What would you like to name your list?")
     listSelect.removeChild(listSelect.lastChild);
-    const firstTitle = prompt("What is the first movie you would like to add to this list?")
-    const movieObj = {
-        title: firstTitle
-    }
+    const movieObj = {}
     let newMovieObjArray = []
-    newMovieObjArray.push(movieObj) 
     db.collection(currentUserEmail).doc(newListName).set({
         listName: newListName,
         movieObjArray: newMovieObjArray
@@ -140,12 +136,6 @@ function changeList(){
 }
 ///////////////////////////////////////////////////////////////////////////APPEND MOVIES//////////////////////////////////////////////////////////////////////////////////////////////
 function appendUnwatchedMovieList(movieTitle){
-    movieObj = {
-        title: movieTitle
-    }
-    unwatchedMovies.push(movieTitle);
-    movieObjArray.push(movieObj);
-    streamCheck(movieTitle);
     movieList.innerHTML += `<li data-movieUnwatched="${movieTitle}"> ${movieTitle} <select data-movie="${movieTitle}" id="ratings">
     <option value="null" selected>Select Rating</option>
     <option value="bad">Bad</option>
@@ -160,8 +150,8 @@ function appendUnwatchedMovieList(movieTitle){
     generateEventListeners();
 }
 
-function appendWatchedMovieList(movieTitle, rating){
-    watchedMovies.querySelector(`.${rating}-container`).innerHTML += `<div class="${rating} watched-movie" data-movieWatched="${movieTitle}
-    " watched-movie"> ${movieTitle} <button id="unwatch" data-movie="${movieTitle}">Unwatch/Rate</button></div>`;
+function appendWatchedMovieList(title, rating){
+    watchedMovies.querySelector(`.${rating}-container`).innerHTML += `<div class="${rating} watched-movie" data-movieWatched="${title}">
+                ${title} ${appendStreaming(pullMovieObjOut(title))}<button id="unwatch" data-movie="${title}" >Unwatch/Rate</button></div>`;
     generateEventListeners();
 }

@@ -23,6 +23,11 @@ function pullMovieObjOut(movieTitle){
     return movieObjArray.find(obj => obj.title == movieTitle);
 }
 
+function findMovieObjIndex(movie){
+    return movieObjArray.findIndex(obj => obj.title == movie)
+
+}
+
 function updateMoviesList(){
     let movieObjs = [];
     db.collection("Movies").get().then(function(querySnapshot) {
@@ -154,7 +159,6 @@ addMovieText.addEventListener('keyup',displayMatches)
 
 
 function findMatches(wordToMatch, streamableMovies){
-    console.log("test")
     return streamableMovies.filter(movie => {
         const regex = new RegExp(wordToMatch, 'gi');
         return movie.match(regex);
@@ -163,12 +167,15 @@ function findMatches(wordToMatch, streamableMovies){
 
 function displayMatches(e){
     let matchArray = [];
-    if (e.key =="Backspace" || addMovieText.value.length <= 1){
-        matchArray = findMatches(this.value,allStreamableMovies);
-        
-    }
-    else{
-        matchArray = findMatches(this.value,lastSuggestionArray);
+    if (e){
+
+        if (e.key =="Backspace" || addMovieText.value.length <= 1){
+            matchArray = findMatches(this.value,allStreamableMovies);
+            
+        }
+        else{
+            matchArray = findMatches(this.value,lastSuggestionArray);
+        }
     }
     lastSuggestionArray = matchArray;
     if (matchArray.length < 100){
@@ -190,7 +197,9 @@ function displayMatches(e){
 }
 
 function clickedSuggestion(e){
+    console.log(test)
     addMovieText.value = this.querySelector("span").textContent;
+    displayMatches();
 }
 
 
@@ -198,6 +207,12 @@ function clickedSuggestion(e){
 
 function addMovie(){
     let movieTitle = addMovieText.value;
+    movieObj = {
+        title: movieTitle
+    }
+    unwatchedMovies.push(movieTitle);
+    movieObjArray.push(movieObj);
+    streamCheck(movieTitle);
     appendUnwatchedMovieList(movieTitle);
     db.collection(currentUserEmail).doc(currentList).update({
         movieObjArray: movieObjArray
@@ -218,13 +233,13 @@ function rate(e){
     
     
     if (this.value=="remove"){
-        movieObjArray.splice(movieObjArray.findIndex(obj => obj.title == movie),1)
+        movieObjArray.splice(findMovieObjIndex(movie),1)
         db.collection(currentUserEmail).doc(currentList).update({
             movieObjArray: movieObjArray
         });
     }
     else{
-        movieObjArray[movieObjArray.findIndex(obj => obj.title == movie)].rating = this.value;
+        movieObjArray[findMovieObjIndex(movie)].rating = this.value;
         db.collection(currentUserEmail).doc(currentList).update({
             movieObjArray: movieObjArray
         })
@@ -234,12 +249,14 @@ function rate(e){
     if (this.value != "remove"){
         appendWatchedMovieList(movie, this.value);
     }
+    generateEventListeners();
     
 }
 
 function unrate(e){
     const movie = this.dataset.movie;
-    movieObjArray[movieObjArray.findIndex(obj => obj.title == movie)].rating = "";
+    console.log(movie)
+    movieObjArray[findMovieObjIndex(movie)].rating = "";
     db.collection(currentUserEmail).doc(currentList).update({
         movieObjArray: movieObjArray
     })
