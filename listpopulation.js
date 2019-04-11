@@ -76,7 +76,7 @@ function populateListSelect(){
 function deleteList(){
     const conf = prompt(`Please type ${currentList} to confirm deletion.`)
     if (conf == currentList){
-        movieListArray.splice(movieListArray.indexOf(listSelect.value));
+        movieListArray.splice(movieListArray.indexOf(listSelect.value),1);
         db.collection(currentUserEmail).doc("movie_lists").set({
             movie_list_array: movieListArray
         })
