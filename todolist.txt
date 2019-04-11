@@ -10,4 +10,4 @@ LISTS:
 1. Make autocomplete list change when you click on a autocomplete. DONE
 2. Dont ask for first movie when making a new list DONE
 3. Fix: Rate -> unRate not showing on page DONE
-4. Fix: Delete List delets all lists from bottom up to current selected list.
+4. Fix: Delete List delets all lists from bottom up to current selected list. DONE
