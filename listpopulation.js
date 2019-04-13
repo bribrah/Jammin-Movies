@@ -54,11 +54,16 @@ let currentList = listSelect.value;
 function populateListSelect(){
     listSelect.innerHTML = "";
     const deleteButton = document.createElement('button');
-    deleteButton.textContent = "DeleteList"
+    deleteButton.textContent = "Delete List"
     deleteButton.classList = "list-delete-button"
     
+    const addButton = document.createElement('button')
+    addButton.textContent = "Add List";
+    addButton.classList = "list-add-button"
+    listSelectContainer.appendChild(addButton)
     listSelectContainer.appendChild(deleteButton);
     document.querySelector(".list-delete-button").addEventListener('click',deleteList)
+    document.querySelector(".list-add-button").addEventListener('click',createNewList)
     
     movieListArray = currentUserObject.movie_list_array
     movieListArray.forEach(list =>{
@@ -126,13 +131,8 @@ function changeList(){
     streamableMovies = [];
     unwatchedMovies = [];
     allMovies = [];
-    if (listSelect.value != "Create new List"){
-        currentList = listSelect.value;
-        generateMovieList(currentList);
-    }
-    else{
-        createNewList();
-    }
+    currentList = listSelect.value;
+    generateMovieList(currentList);
 }
 ///////////////////////////////////////////////////////////////////////////APPEND MOVIES//////////////////////////////////////////////////////////////////////////////////////////////
 function appendUnwatchedMovieList(movieTitle){
@@ -152,6 +152,6 @@ function appendUnwatchedMovieList(movieTitle){
 
 function appendWatchedMovieList(title, rating){
     watchedMovies.querySelector(`.${rating}-container`).innerHTML += `<div class="${rating} watched-movie" data-movieWatched="${title}">
-                ${title} ${appendStreaming(pullMovieObjOut(title))}<button id="unwatch" data-movie="${title}" >Unwatch/Rate</button></div>`;
+    ${title} ${appendStreaming(pullMovieObjOut(title))}<button id="unwatch" data-movie="${title}" >Unwatch/Rate</button></div>`;
     generateEventListeners();
 }
