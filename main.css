@@ -180,3 +180,46 @@ li.current-user-display{
 .masterpiece{
     background-color: darkgreen;
 }
+
+
+/*****************LIST SELECT *************/
+.list-select{
+    width: 30%;
+    margin: auto;
+}
+.list-add-button{
+    background-color: #4c93f0;
+    border: none;
+    color: white;
+    padding: .5%;
+    margin: 5px;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.list-delete-button{
+    background-color: red;
+    border: none;
+    color: white;
+    padding: .5%;
+    margin: 5px;
+    font-weight: bold;
+    font-size: 1.2em;
+    
+}
+
+#list-select{
+    padding: 5px 5px;
+    border: none;
+    font-size: 2em;
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    background: url(http://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/br_down.png) no-repeat right #49f027;\
+    background-position: right;
+    
+}
+
+#list-select select{
+
+}
