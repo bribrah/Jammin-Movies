@@ -184,7 +184,7 @@ li.current-user-display{
 
 /*****************LIST SELECT *************/
 .list-select{
-    width: 30%;
+    width: 40%;
     margin: auto;
 }
 .list-add-button{
@@ -209,9 +209,9 @@ li.current-user-display{
 }
 
 #list-select{
-    padding: 5px 5px;
+    padding: 5px 5px;   
     border: none;
-    font-size: 2em;
+    font-size: 1.4em;
     width: 100%;
     appearance: none;
     -webkit-appearance: none;
