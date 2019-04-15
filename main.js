@@ -92,7 +92,7 @@ function streamCheck(movie){
     else if (netflixTitles.indexOf(movie.toLowerCase()) == -1 && movieObj.onNetflix){
         movieObj.onNetflix = false;
     }
-    if ((movieObj.onNetflix || movieObj.onHulu || movieObj.onAmazon) && (!movieObj.rating || movieObj.rating == "")){
+    if ((movieObj.onNetflix || movieObj.onHulu || movieObj.onAmazon ||movieObj.onHbo) && (!movieObj.rating || movieObj.rating == "")){
         streamableMovies.push(movieObj.title)
     }
     
