@@ -70,6 +70,13 @@ function streamCheck(movie){
         movieObj.onHulu = false;
         
     }
+    if (hboTitles.indexOf(movie.toLowerCase()) > -1 && !movieObj.onHbo){
+        movieObj.onHbo = true;
+    }
+    else if (hboTitles.indexOf(movie.toLowerCase()) == -1 && movieObj.onHbo){
+        movieObj.onHbo = false;
+        
+    }
     
     if (amazonTitles.indexOf(movie.toLowerCase()) > -1 && !movieObj.onAmazon){
         movieObj.onAmazon = true;
@@ -94,18 +101,18 @@ function streamCheck(movie){
 
 function appendStreaming(movie){
     let append= "";
-    const onNetflix = movie.onNetflix;
-    const onHulu = movie.onHulu;
-    const onAmazon = movie.onAmazon;
     
-    if (onNetflix){
+    if (movie.onNetflix){
         append += " <img src='images/netflix-icon.png' class='stream-icon'>"
     }
-    if(onHulu){
+    if(movie.onHulu){
         append += "<img src='images/hulu-icon.png' class='stream-icon'>"
     }
-    if(onAmazon){
+    if(movie.onAmazon){
         append += "<img src='images/amazon-icon.png' class='stream-icon'>"
+    }
+    if(movie.onHbo){
+        append += "<img src='images/hbo-icon.png' class='stream-icon'>"
     }
     return append;
 }
