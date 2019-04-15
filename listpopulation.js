@@ -61,8 +61,6 @@ function populateListSelect(){
     addButton.textContent = "Add List";
     addButton.classList = "list-add-button"
     listSelectContainer.appendChild(addButton)
-    listSelectContainer.appendChild(deleteButton);
-    document.querySelector(".list-delete-button").addEventListener('click',deleteList)
     document.querySelector(".list-add-button").addEventListener('click',createNewList)
     
     movieListArray = currentUserObject.movie_list_array
@@ -72,10 +70,14 @@ function populateListSelect(){
         optionNode.appendChild(optionText);
         listSelect.appendChild(optionNode);
     })
-    let addNewNode = document.createElement('option');
-    let addNewText = document.createTextNode("Create new List")
-    addNewNode.appendChild(addNewText);
-    listSelect.appendChild(addNewNode);
+    if (movieListArray.length == 0){
+        console.log("test")
+        listSelect.innerHTML = "<option>Please make a new list to add movies!</option>"
+    }
+    else{
+        listSelectContainer.appendChild(deleteButton);
+        document.querySelector(".list-delete-button").addEventListener('click',deleteList)
+    }
 }
 
 function deleteList(){
@@ -86,35 +88,34 @@ function deleteList(){
             movie_list_array: movieListArray
         })
         listSelectContainer.removeChild(document.querySelector(".list-delete-button"))
+        listSelectContainer.removeChild(document.querySelector(".list-add-button"))
         populateListSelect()
-        generateMovieList(listSelect.value)
+        currentList = movieListArray[0];
+        if (movieListArray.length != 0){
+            changeList();
+        }
     }
 }
 function createNewList(){
     const newListName = prompt("What would you like to name your list?")
-    listSelect.removeChild(listSelect.lastChild);
     const movieObj = {}
     let newMovieObjArray = []
     db.collection(currentUserEmail).doc(newListName).set({
         listName: newListName,
         movieObjArray: newMovieObjArray
     }).then(() =>{
-        
         movieListArray.push(newListName);
         db.collection(currentUserEmail).doc("movie_lists").set({
             movie_list_array: movieListArray
         }).then(() => {
-            let optionNode = document.createElement('option');
-            let optionText = document.createTextNode(newListName);
-            optionNode.appendChild(optionText);
-            listSelect.appendChild(optionNode);
+            if (movieListArray.length != 1){
+                listSelectContainer.removeChild(document.querySelector(".list-delete-button"))
+            }
+            listSelectContainer.removeChild(document.querySelector(".list-add-button"))
+            populateListSelect();
             listSelect.value = newListName;
             currentList = newListName;
-            let addNewNode = document.createElement('option');
-            let addNewText = document.createTextNode("Create new List")
-            addNewNode.appendChild(addNewText);
-            listSelect.appendChild(addNewNode);
-            generateMovieList(newListName);
+            changeList()
             db.collection("list_index").doc(`${newListName}`).set({
                 name: newListName,
                 subscribers: 1
@@ -126,13 +127,15 @@ function createNewList(){
 }
 
 function changeList(){
-    movieObjArray = []
-    movieList.innerHTML = "";
-    streamableMovies = [];
-    unwatchedMovies = [];
-    allMovies = [];
-    currentList = listSelect.value;
-    generateMovieList(currentList);
+    if (movieListArray.length != 0){
+        movieObjArray = []
+        movieList.innerHTML = "";
+        streamableMovies = [];
+        unwatchedMovies = [];
+        allMovies = [];
+        currentList = listSelect.value;
+        generateMovieList(currentList);
+    }
 }
 ///////////////////////////////////////////////////////////////////////////APPEND MOVIES//////////////////////////////////////////////////////////////////////////////////////////////
 function appendUnwatchedMovieList(movieTitle){

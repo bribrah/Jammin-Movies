@@ -55,12 +55,10 @@ function createUserObject(){
         }
         console.log(window.location.pathname)
         
-        if (window.location.pathname == "/list.html" || window.location.pathname == "/home/brian/Desktop/bribrah_coding/web-projects/jammin-movies/list.html"){
             console.log("test")
             addMovieButton.disabled = false;
             populateListSelect();
             changeList();
-        }
         
         
     })

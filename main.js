@@ -197,7 +197,6 @@ function displayMatches(e){
 }
 
 function clickedSuggestion(e){
-    console.log(test)
     addMovieText.value = this.querySelector("span").textContent;
     displayMatches();
 }
