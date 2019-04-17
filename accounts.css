@@ -1,10 +1,15 @@
 .signup-form{
     margin: auto;
     width: 50%;
+    min-width: 280px;
     margin-top: 15%;
+    text-align: center;
 }
 
 .form-text{
     width: 100%;
-    margin-bottom: 3px;
+    max-width: 350px;
+    display: block;
+    margin: auto;
+    margin-bottom: 15px;
 }
