@@ -4,6 +4,13 @@ const passwordInput = document.querySelector("#password");
 const loginButton = document.querySelector("#login-button")
 
 loginButton.addEventListener('click',login);
+passwordInput.addEventListener("keyup", enterKeyCheck)
+
+function enterKeyCheck(e){
+    if (e.key == "Enter"){
+        login();
+    }
+}
 
 function login(){
     firebase.auth().signInWithEmailAndPassword(emailInput.value, passwordInput.value).then(()=>{

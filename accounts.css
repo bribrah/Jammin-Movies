@@ -9,7 +9,17 @@
 .form-text{
     width: 100%;
     max-width: 350px;
-    display: block;
-    margin: auto;
+    display: flex;
+    margin-left: 4vw;
     margin-bottom: 15px;
+    flex: 2;
+    justify-content: flex-end;
 }
+.form-text {
+    flex: 1;
+}
+.form-text label{
+    float: right;
+    padding-left: 6vw;
+}
+
