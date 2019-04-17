@@ -10,7 +10,7 @@
     width: 100%;
     max-width: 350px;
     display: flex;
-    margin-left: 4vw;
+    margin: auto;
     margin-bottom: 15px;
     flex: 2;
     justify-content: flex-end;
@@ -19,7 +19,5 @@
     flex: 1;
 }
 .form-text label{
-    float: right;
-    padding-left: 6vw;
 }
 
