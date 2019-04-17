@@ -1,5 +1,3 @@
-const loginButton = document.querySelector(".login");
-loginButton.addEventListener('click', login);
 let currentUserEmail = "";
 const loginLinks = document.querySelector("#login-signup");
 const db = firebase.firestore();
@@ -29,16 +27,7 @@ function changeNavBar(){
     loginLinks.innerHTML = `<li><a href="list.html">My Lists</a></li><li id='logout'><a>Logout</a></li><li class='current-user-display'>Logged in as: ${sessionStorage.getItem("email")}</li>`
     document.querySelector("#logout").addEventListener('click', logout)
 }
-function login(){
-    firebase.auth().signInWithEmailAndPassword(window.prompt("Please enter your email"), window.prompt("Please enter your password")).then(()=>changeNavBar()).catch(function(error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        console.log(errorMessage);
-        
-        // ...
-    });
-}
+
 function logout(){
     firebase.auth().signOut().then(()=>{
         sessionStorage.setItem("loggedIn",false)

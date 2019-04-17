@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Signup</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="accounts.css">
+    <title>Log In</title>
     <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase.js"></script>
     <script>
         // Initialize Firebase
@@ -31,23 +31,18 @@
     </ul>
     <div class="signup-form">
         <div class="header">
-            <h1>Account Creation</h1>
+            <h1>Login</h1>
         </div>
         <div class="signup-errors"></div>
-        <label for="email"> Email </label> 
+        <label for="email">Email</label>
         <input class="form-text" type="text" id="email">
         
-        <!-- <label for="first-list">Name your First Movie List</label>
-            <input class="form-text" type="text" name="" id="first-list"> -->
-            
-            <label for="password">Password</label>
-            <input class="form-text" type="password" id="password">
-            
-            <label for="password-conf">Password Confirmation</label>
-            <input class="form-text" type="password" id="password-conf">
-            <input type="submit" id="create-account">
-        </div>
+        <label for="password">Password</label>
+        <input class="form-text" type="password" id="password">
         
-        <script src="signup.js"></script>
-    </body>
-    </html>
+        <input type="submit" value="Login" id="login-button">
+    </div>
+    
+    <script src="login.js"></script>
+</body>
+</html>
