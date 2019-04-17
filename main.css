@@ -59,7 +59,7 @@ li.current-user-display{
     margin-top: 10px;
 }
 .stream-icon{
-    width: 35px;
+    width: 4.5vh;
     height: auto;
     vertical-align: bottom
 }
@@ -104,6 +104,9 @@ li.current-user-display{
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
     word-wrap: break-word;
     overflow-wrap: break-word;
+}
+.random-movie a{
+    margin-right: 5px;
 }
 #random:focus {
     outline:0;
@@ -185,13 +188,14 @@ li.current-user-display{
 /*****************LIST SELECT *************/
 .list-select{
     width: 40%;
+    min-width: 290px;
     margin: auto;
 }
 .list-add-button{
     background-color: #4c93f0;
     border: none;
     color: white;
-    padding: .5%;
+    padding: 1.5%;
     margin: 5px;
     font-weight: bold;
     font-size: 1.2em;
@@ -201,7 +205,7 @@ li.current-user-display{
     background-color: red;
     border: none;
     color: white;
-    padding: .5%;
+    padding: 1.5%;
     margin: 5px;
     font-weight: bold;
     font-size: 1.2em;
@@ -211,15 +215,14 @@ li.current-user-display{
 #list-select{
     padding: 5px 5px;   
     border: none;
-    font-size: 1.4em;
+    font-size: 2em;
+    font-size: 3.3vh;
+    text-align: center;
+    font-weight: bolder;
     width: 100%;
     appearance: none;
     -webkit-appearance: none;
-    background: url(http://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/br_down.png) no-repeat right #49f027;\
+    background: url(http://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/br_down.png) no-repeat right white;
     background-position: right;
     
-}
-
-#list-select select{
-
 }
