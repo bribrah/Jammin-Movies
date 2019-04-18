@@ -4,4 +4,4 @@ let amazonTitles = `デメキング,1,10,000 Dollars for a Massacre,10,000 km,10
 amazonTitles.forEach(title => allStreamableMovies.push(title));
 amazonTitles = amazonTitles.map((n,i) => {
     return n.toLowerCase()
-})
+});

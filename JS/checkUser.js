@@ -4,10 +4,10 @@ const db = firebase.firestore();
 
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
-        currentUser = firebase.auth().currentUser
-        currentUserEmail = currentUser.email 
+        currentUser = firebase.auth().currentUser;
+        currentUserEmail = currentUser.email;
         if (sessionStorage.getItem("loggedIn") != "true"){
-            sessionStorage.setItem("loggedIn","true")
+            sessionStorage.setItem("loggedIn","true");
             sessionStorage.setItem("email",currentUserEmail);
             changeNavBar();
         }
@@ -15,7 +15,7 @@ firebase.auth().onAuthStateChanged(function(user) {
         
         
     } else {
-        window.sessionStorage.setItem("loggedIn","false")
+        window.sessionStorage.setItem("loggedIn","false");
         console.log("no user signed in")
     }
 });
@@ -24,13 +24,13 @@ if (sessionStorage.getItem('loggedIn') == "true"){
     changeNavBar();
 }
 function changeNavBar(){
-    loginLinks.innerHTML = `<li><a href="list.html">My Lists</a></li><li id='logout'><a>Logout</a></li><li class='current-user-display'>Logged in as: ${sessionStorage.getItem("email")}</li>`
+    loginLinks.innerHTML = `<li><a href="list.html">My Lists</a></li><li id='logout'><a>Logout</a></li><li class='current-user-display'>Logged in as: ${sessionStorage.getItem("email")}</li>`;
     document.querySelector("#logout").addEventListener('click', logout)
 }
 
 function logout(){
     firebase.auth().signOut().then(()=>{
-        sessionStorage.setItem("loggedIn",false)
+        sessionStorage.setItem("loggedIn",false);
         sessionStorage.removeItem("email");
         location.reload()
     })
@@ -41,10 +41,10 @@ function createUserObject(){
         currentUserObject = {
             email: currentUserEmail,
             movie_list_array: doc.data().movie_list_array
-        }
-        console.log(window.location.pathname)
+        };
+        console.log(window.location.pathname);
         
-            console.log("test")
+            console.log("test");
             addMovieButton.disabled = false;
             populateListSelect();
             changeList();

@@ -4,4 +4,4 @@ huluTitles.forEach(title => allStreamableMovies.push(title));
 
 huluTitles = huluTitles.map((n) => {
     return n.toLowerCase()
-})
+});

@@ -10,6 +10,30 @@ function generateEventListeners(){
     unrateButtons = document.querySelectorAll("#unwatch");
     unrateButtons.forEach(button => button.addEventListener('click',unrate))
 }
+
+function appendInfo(movie){
+    let append = ""
+    ratings = movie.Ratings;
+    runTime = movie.Runtime;
+    //ratings
+    const imdb = ratings.find(rating => rating.Source == "Internet Movie Database");
+    const RT = ratings.find(rating => rating.Source == "Rotten Tomatoes")
+    const metaCritic = ratings.find(rating => rating.Source == "Metacritic");
+    if(imdb){
+        append += `<div class="rating-append">IMDB: ${imdb.Value}</div>`
+    }
+    if (RT){
+        append += `<div class="rating-append">Rotten Tomatoes: ${RT.Value}</div>`
+    }
+    if(metaCritic){
+        append += `<div class="rating-append">Meatcritic: ${metaCritic.Value}</div>`
+    }
+    //runtime
+    append += `<div class="rating-append">Runtime: ${runTime}</div>`
+    //plot
+    append += `<div class="plot-append">${movie.Plot}</div>`
+    return append;
+}
 function isMobileDevice() {
     return (navigator.userAgent.match(/Android/i)
     || navigator.userAgent.match(/webOS/i)
@@ -28,31 +52,6 @@ function findMovieObjIndex(movie){
 
 }
 
-function updateMoviesList(){
-    let movieObjs = [];
-    db.collection("Movies").get().then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-            let obj;
-            if (doc.data().rating){
-                obj = {
-                    title: doc.data().Title,
-                    rating: doc.data().rating
-                }
-            }
-            else{
-                obj = {
-                    title: doc.data().Title,
-                }
-            }
-            movieObjs.push(obj)
-        })
-        db.collection("cheesemas46@gmail.com").doc("Movies").update({
-            movieObjArray: movieObjs
-        })
-    })
-    
-    
-}
 
 
 /////////////////////////////////////////////////////////////// STREAMING STUFFF ////////////////////////////////////////////////////////
@@ -120,8 +119,13 @@ function appendStreaming(movie){
 //////////////////////// RANDOM NUMBER GENERATOR //////////////////////////
 const randomNumButton = document.querySelector("#random");
 const randomNumDisplay = document.querySelector(".rand-gen-display");
-const streamableCheckbox = document.querySelector("#stream-only")
+const streamableCheckbox = document.querySelector("#stream-only");
 let randomClicks = 0;
+
+function appendRandom(title){
+    randomNumDisplay.innerHTML+= `<div class="random-movie"><div class="dropdown"><span class="random-title">${title}</span>${appendStreaming(pullMovieObjOut(title))}
+    <div class="dropdown-content">${infoAppend}</div></div></div>`;
+}
 
 function generateRandom(){
     if (randomClicks == 0){
@@ -131,17 +135,26 @@ function generateRandom(){
         const size = streamableMovies.length;
         const randomNum = Math.floor(Math.random() * size);
         const title = streamableMovies[randomNum];
-        console.log(title)
-        streamableMovies.splice(randomNum,1);
-        randomNumDisplay.innerHTML+= `<div class="random-movie"><a href="https://www.rottentomatoes.com/search/?search=${title}" target="_blank">${title}</a>${appendStreaming(pullMovieObjOut(title))}</div>`;
+        fetch(`http://www.omdbapi.com/?t=${title}&apikey=7b75867a`).then(response => response.json()).then(movie =>{
+            console.log(movie);
+            infoAppend = appendInfo(movie)
+        }).then( () =>{
+            console.log(ratings);
+            streamableMovies.splice(randomNum,1);
+            appendRandom(title)
+        })
     }
     else{
         const size = unwatchedMovies.length;
         const randomNum = Math.floor(Math.random() * size);
         const title = unwatchedMovies[randomNum];
-        unwatchedMovies.splice(randomNum,1);
-        randomNumDisplay.innerHTML+= `<div class="random-movie"><a href="https://www.rottentomatoes.com/search/?search=${title}" target="_blank">${title}</a>${appendStreaming(pullMovieObjOut(title))}</div>`;
-        
+        fetch(`http://www.omdbapi.com/?t=${title}&apikey=7b75867a`).then(response => response.json()).then(movie =>{
+            infoAppend = appendInfo(movie)
+        }).then( () =>{
+            unwatchedMovies.splice(randomNum,1);
+            appendRandom(title);
+            
+        })
     }
     randomClicks++;
     if (randomClicks > 5){
@@ -156,13 +169,13 @@ function generateRandom(){
 randomNumButton.addEventListener("click", generateRandom);
 /////////////////////// AUTOCOMPLETE //////////////////////////////////////////////////////
 const addMovieButton = document.querySelector("#add-movie-submit");
-const addMovieText = document.querySelector("#add-movie")
-const suggestions = document.querySelector(".suggestions")
+const addMovieText = document.querySelector("#add-movie");
+const suggestions = document.querySelector(".suggestions");
 
 let lastSuggestionArray = [];
 
-addMovieText.addEventListener('change',displayMatches)
-addMovieText.addEventListener('keyup',displayMatches)
+addMovieText.addEventListener('change',displayMatches);
+addMovieText.addEventListener('keyup',displayMatches);
 
 
 function findMatches(wordToMatch, streamableMovies){
@@ -198,7 +211,7 @@ function displayMatches(e){
             `;
         }).join('');
         suggestions.innerHTML = html;
-        const titleSuggestions = document.querySelectorAll(".nameSuggestion")
+        const titleSuggestions = document.querySelectorAll(".nameSuggestion");
         titleSuggestions.forEach(suggestion=> suggestion.addEventListener("click", clickedSuggestion));
     }
 }
@@ -215,7 +228,7 @@ function addMovie(){
     let movieTitle = addMovieText.value;
     movieObj = {
         title: movieTitle
-    }
+    };
     unwatchedMovies.push(movieTitle);
     movieObjArray.push(movieObj);
     streamCheck(movieTitle);
@@ -239,7 +252,7 @@ function rate(e){
     
     
     if (this.value=="remove"){
-        movieObjArray.splice(findMovieObjIndex(movie),1)
+        movieObjArray.splice(findMovieObjIndex(movie),1);
         db.collection(currentUserEmail).doc(currentList).update({
             movieObjArray: movieObjArray
         });
@@ -250,7 +263,7 @@ function rate(e){
             movieObjArray: movieObjArray
         })
     }
-    const movieListElement = document.querySelector(`[data-movieUnwatched = "${movie}"]`)
+    const movieListElement = document.querySelector(`[data-movieUnwatched = "${movie}"]`);
     movieList.removeChild(movieListElement);
     if (this.value != "remove"){
         appendWatchedMovieList(movie, this.value);
@@ -261,11 +274,11 @@ function rate(e){
 
 function unrate(e){
     const movie = this.dataset.movie;
-    console.log(movie)
+    console.log(movie);
     movieObjArray[findMovieObjIndex(movie)].rating = "";
     db.collection(currentUserEmail).doc(currentList).update({
         movieObjArray: movieObjArray
-    })
+    });
     const listElement = watchedMovies.querySelector(`[data-moviewatched="${movie}"]`);
     const rating = listElement.classList[0];
     console.log(listElement);

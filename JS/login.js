@@ -1,10 +1,10 @@
 const errors = document.querySelector(".signup-errors");
 const emailInput = document.querySelector("#email");
 const passwordInput = document.querySelector("#password");
-const loginButton = document.querySelector("#login-button")
+const loginButton = document.querySelector("#login-button");
 
 loginButton.addEventListener('click',login);
-passwordInput.addEventListener("keyup", enterKeyCheck)
+passwordInput.addEventListener("keyup", enterKeyCheck);
 
 function enterKeyCheck(e){
     if (e.key == "Enter"){

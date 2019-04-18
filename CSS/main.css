@@ -89,7 +89,7 @@ li.current-user-display{
     text-align: center;
 }
 #random{
-    background-image: url(images/popcorn.png);
+    background-image: url(../images/popcorn.png);
     background-repeat: no-repeat;
     background-position: 50% 50%;
     box-shadow: 4px 4px 5px black;
@@ -105,8 +105,9 @@ li.current-user-display{
     word-wrap: break-word;
     overflow-wrap: break-word;
 }
-.random-movie a{
+.random-movie .random-title{
     margin-right: 5px;
+    color: blue;
 }
 #random:focus {
     outline:0;
@@ -225,4 +226,32 @@ li.current-user-display{
     background: url(http://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/br_down.png) no-repeat right white;
     background-position: right;
     
+}
+
+/**************** DROP DOWN ***********************/
+.dropdown{
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content{
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.rating-append{
+    font-size: .5em;
+}
+.plot-append{
+    margin-top: 3px;
+    font-size: .5em;
 }
