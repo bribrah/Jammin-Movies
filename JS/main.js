@@ -128,6 +128,7 @@ function appendRandom(title){
 }
 
 function generateRandom(){
+    let movieJSON;
     if (randomClicks == 0){
         randomNumDisplay.innerHTML = "";
     }
@@ -136,9 +137,9 @@ function generateRandom(){
         const randomNum = Math.floor(Math.random() * size);
         const title = streamableMovies[randomNum];
         fetch(`https://www.omdbapi.com/?t=${title}&apikey=7b75867a`).then(response => response.json()).then(movie =>{
-            console.log(movie);
-            infoAppend = appendInfo(movie)
+            movieJSON = movie;
         }).then( () =>{
+            infoAppend = appendInfo(movieJSON)
             console.log(ratings);
             streamableMovies.splice(randomNum,1);
             appendRandom(title)
@@ -149,8 +150,9 @@ function generateRandom(){
         const randomNum = Math.floor(Math.random() * size);
         const title = unwatchedMovies[randomNum];
         fetch(`https://www.omdbapi.com/?t=${title}&apikey=7b75867a`).then(response => response.json()).then(movie =>{
-            infoAppend = appendInfo(movie)
+            movieJSON = movie;
         }).then( () =>{
+            infoAppend = appendInfo(movieJSON)
             unwatchedMovies.splice(randomNum,1);
             appendRandom(title);
             
