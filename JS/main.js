@@ -12,26 +12,26 @@ function generateEventListeners(){
 }
 
 function appendInfo(movie){
+    console.log(movie);
     let append = ""
-    ratings = movie.Ratings;
-    runTime = movie.Runtime;
+    runTime = movie.runTime;
     //ratings
-    const imdb = ratings.find(rating => rating.Source == "Internet Movie Database");
-    const RT = ratings.find(rating => rating.Source == "Rotten Tomatoes")
-    const metaCritic = ratings.find(rating => rating.Source == "Metacritic");
+    const imdb = movie.imdb
+    const RT = movie.RT
+    const metaCritic = movie.metaCritic;
     if(imdb){
-        append += `<div class="rating-append">IMDB: ${imdb.Value}</div>`
+        append += `<div class="rating-append">IMDB: ${imdb}</div>`
     }
     if (RT){
-        append += `<div class="rating-append">Rotten Tomatoes: ${RT.Value}</div>`
+        append += `<div class="rating-append">Rotten Tomatoes: ${RT}</div>`
     }
     if(metaCritic){
-        append += `<div class="rating-append">Meatcritic: ${metaCritic.Value}</div>`
+        append += `<div class="rating-append">Meatcritic: ${metaCritic}</div>`
     }
     //runtime
     append += `<div class="rating-append">Runtime: ${runTime}</div>`
     //plot
-    append += `<div class="plot-append">${movie.Plot}</div>`
+    append += `<div class="plot-append">${movie.plot}</div>`
     return append;
 }
 function isMobileDevice() {
@@ -49,6 +49,36 @@ function pullMovieObjOut(movieTitle){
 
 function findMovieObjIndex(movie){
     return movieObjArray.findIndex(obj => obj.title == movie)
+    
+}
+
+
+//TEMPORARY FUNCTION TO UPDATE PREEXISTING LISTS.
+function updateMovieObjs(){
+    movieObjArray.forEach(movieObj =>{
+        fetch(`https://www.omdbapi.com/?t=${movieObj.title}&apikey=7b75867a`).then(response => response.json()).then(movie =>{
+        movieJSON = movie;
+    }).then( () =>{
+        const ratings = movieJSON.Ratings;
+        movieObj.imdb = ratings.find(rating => rating.Source == "Internet Movie Database").Value;;
+        movieObj.RT = ratings.find(rating => rating.Source == "Rotten Tomatoes").Value;
+        movieObj.metaCritic = ratings.find(rating => rating.Source == "Metacritic").Value;;
+        movieObj.runTime = movieJSON.Runtime;
+        movieObj.plot = movieJSON.Plot;
+    }).catch(()=>fetch(`https://www.omdbapi.com/?t=${movieObj.title}&apikey=7b75867a`).then(response => response.json()).then(movie =>{
+    movieJSON = movie;
+}).then( () =>{
+    const ratings = movieJSON.Ratings;
+    movieObj.imdb = ratings.find(rating => rating.Source == "Internet Movie Database").Value;;
+    movieObj.RT = ratings.find(rating => rating.Source == "Rotten Tomatoes").Value;
+    movieObj.metaCritic = ratings.find(rating => rating.Source == "Metacritic").Value;;
+    movieObj.runTime = movieJSON.Runtime;
+    movieObj.plot = movieJSON.Plot;
+}))
+})
+db.collection(currentUserEmail).doc(currentList).update({
+    movieObjArray: movieObjArray
+})
 
 }
 
@@ -124,7 +154,7 @@ let randomClicks = 0;
 
 function appendRandom(title){
     randomNumDisplay.innerHTML+= `<div class="random-movie"><div class="dropdown"><span class="random-title">${title}</span>${appendStreaming(pullMovieObjOut(title))}
-    <div class="dropdown-content">${infoAppend}</div></div></div>`;
+    <div class="dropdown-content">${appendInfo(pullMovieObjOut(title))}</div></div></div>`;
 }
 
 function generateRandom(){
@@ -136,26 +166,13 @@ function generateRandom(){
         const size = streamableMovies.length;
         const randomNum = Math.floor(Math.random() * size);
         const title = streamableMovies[randomNum];
-        fetch(`https://www.omdbapi.com/?t=${title}&apikey=7b75867a`).then(response => response.json()).then(movie =>{
-            movieJSON = movie;
-        }).then( () =>{
-            infoAppend = appendInfo(movieJSON)
-            streamableMovies.splice(randomNum,1);
-            appendRandom(title)
-        })
+        appendRandom(title)
     }
     else{
         const size = unwatchedMovies.length;
         const randomNum = Math.floor(Math.random() * size);
         const title = unwatchedMovies[randomNum];
-        fetch(`https://www.omdbapi.com/?t=${title}&apikey=7b75867a`).then(response => response.json()).then(movie =>{
-            movieJSON = movie;
-        }).then( () =>{
-            infoAppend = appendInfo(movieJSON)
-            unwatchedMovies.splice(randomNum,1);
-            appendRandom(title);
-            
-        })
+        appendRandom(title);
     }
     randomClicks++;
     if (randomClicks > 5){
@@ -189,7 +206,7 @@ function findMatches(wordToMatch, streamableMovies){
 function displayMatches(e){
     let matchArray = [];
     if (e){
-
+        
         if (e.key =="Backspace" || addMovieText.value.length <= 1){
             matchArray = findMatches(this.value,allStreamableMovies);
             
@@ -230,16 +247,26 @@ function addMovie(){
     movieObj = {
         title: movieTitle
     };
-    unwatchedMovies.push(movieTitle);
-    movieObjArray.push(movieObj);
-    streamCheck(movieTitle);
-    appendUnwatchedMovieList(movieTitle);
-    db.collection(currentUserEmail).doc(currentList).update({
-        movieObjArray: movieObjArray
-    })
-    .then(() => console.log("document written"))
-    .catch(() => console.error("doc writing error"));
-    addMovieText.value = ""
+    fetch(`https://www.omdbapi.com/?t=${movieObj.title}&apikey=7b75867a`).then(response => response.json()).then(movie =>{
+    movieJSON = movie;
+}).then( () =>{
+    const ratings = movieJSON.Ratings;
+    movieObj.imdb = ratings.find(rating => rating.Source == "Internet Movie Database").Value;;
+    movieObj.RT = ratings.find(rating => rating.Source == "Rotten Tomatoes").Value;
+    movieObj.metaCritic = ratings.find(rating => rating.Source == "Metacritic").Value;;
+    movieObj.runTime = movieJSON.Runtime;
+    movieObj.plot = movieJSON.Plot;
+})
+unwatchedMovies.push(movieTitle);
+movieObjArray.push(movieObj);
+streamCheck(movieTitle);
+appendUnwatchedMovieList(movieTitle);
+db.collection(currentUserEmail).doc(currentList).update({
+    movieObjArray: movieObjArray
+})
+.then(() => console.log("document written"))
+.catch(() => console.error("doc writing error"));
+addMovieText.value = ""
 }
 
 addMovieButton.addEventListener("click", addMovie);
