@@ -140,7 +140,6 @@ function generateRandom(){
             movieJSON = movie;
         }).then( () =>{
             infoAppend = appendInfo(movieJSON)
-            console.log(ratings);
             streamableMovies.splice(randomNum,1);
             appendRandom(title)
         })
@@ -276,14 +275,12 @@ function rate(e){
 
 function unrate(e){
     const movie = this.dataset.movie;
-    console.log(movie);
     movieObjArray[findMovieObjIndex(movie)].rating = "";
     db.collection(currentUserEmail).doc(currentList).update({
         movieObjArray: movieObjArray
     });
     const listElement = watchedMovies.querySelector(`[data-moviewatched="${movie}"]`);
     const rating = listElement.classList[0];
-    console.log(listElement);
     watchedMovies.querySelector(`.${rating}-container`).removeChild(listElement);
     appendUnwatchedMovieList(movie);
 }
