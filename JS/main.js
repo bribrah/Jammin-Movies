@@ -200,7 +200,7 @@ function displayMatches(e){
                 const movies = searchResults.Search;
                 console.log(movies);
                 movies.forEach(movie =>{
-                    suggestions.innerHTML += `<li class="name-suggestion"><img src="${movie.Poster}"> <span>${movie.Title}(${movie.Year})</span></li>`
+                    suggestions.innerHTML += `<li class="name-suggestion"><img src="${movie.Poster}"> <span>${movie.Title}</span>(${movie.Year})</li>`
                 })
                 const titleSuggestions = document.querySelectorAll(".name-suggestion");
                 titleSuggestions.forEach(suggestion=> suggestion.addEventListener("click", clickedSuggestion));
