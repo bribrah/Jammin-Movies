@@ -158,7 +158,6 @@ function appendRandom(title){
 }
 
 function generateRandom(){
-    let movieJSON;
     if (randomClicks == 0){
         randomNumDisplay.innerHTML = "";
     }
@@ -167,12 +166,14 @@ function generateRandom(){
         const randomNum = Math.floor(Math.random() * size);
         const title = streamableMovies[randomNum];
         appendRandom(title)
+        streamableMovies.splice(streamableMovies.indexOf(title),1);
     }
     else{
         const size = unwatchedMovies.length;
         const randomNum = Math.floor(Math.random() * size);
         const title = unwatchedMovies[randomNum];
         appendRandom(title);
+        unwatchedMovies.splice(unwatchedMovies.indexOf(title),1)
     }
     randomClicks++;
     if (randomClicks > 5){
