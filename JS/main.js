@@ -12,7 +12,6 @@ function generateEventListeners(){
 }
 
 function appendInfo(movie){
-    console.log(movie);
     let append = ""
     runTime = movie.runTime;
     //ratings
@@ -243,6 +242,7 @@ function clickedSuggestion(e){
 
 function addMovie(){
     let movieTitle = addMovieText.value;
+    let searchResponse;
     
     fetch(`https://www.omdbapi.com/?t=${movieTitle}&apikey=7b75867a`).then(response => response.json()).then(movie =>{
     movieJSON = movie;
@@ -273,6 +273,7 @@ function addMovie(){
     .catch(() => console.error("doc writing error"));
     addMovieText.value = ""
 })
+
 }
 
 addMovieButton.addEventListener("click", addMovie);

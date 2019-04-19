@@ -27,16 +27,7 @@ function generateMovieList(selectedList){
             }
             else{
                 unwatchedMovies.push(title);
-                movieList.innerHTML += `<li data-movieUnwatched="${title}"> ${title} ${appendStreaming(movieObj)} <select data-movie="${title}" id="ratings" >
-                <option value="null" selected>Select Rating</option>
-                <option value="bad">Bad</option>
-                <option value="meh">Meh</option>
-                <option value="pretty-good">Pretty Good</option>
-                <option value="great">Great</option>
-                <option value="masterpiece">Masterpiece</option>
-                <option value="remove">Remove Movie</option>
-                </select>
-                </li>`;
+                appendUnwatchedMovieList(title);
             }
         });
         generateEventListeners();
@@ -142,8 +133,8 @@ function changeList(){
     }
 }
 ///////////////////////////////////////////////////////////////////////////APPEND MOVIES//////////////////////////////////////////////////////////////////////////////////////////////
-function appendUnwatchedMovieList(movieTitle){
-    movieList.innerHTML += `<li data-movieUnwatched="${movieTitle}"> ${movieTitle} <select data-movie="${movieTitle}" id="ratings">
+function appendUnwatchedMovieList(title){
+    movieList.innerHTML += `<li data-movieUnwatched="${title}"> <div class="dropdown">${title} ${appendStreaming(pullMovieObjOut(title))}<div class="dropdown-content">${appendInfo(pullMovieObjOut(title))}</div></div> <select data-movie="${title}" id="ratings" >
     <option value="null" selected>Select Rating</option>
     <option value="bad">Bad</option>
     <option value="meh">Meh</option>
@@ -151,7 +142,8 @@ function appendUnwatchedMovieList(movieTitle){
     <option value="great">Great</option>
     <option value="masterpiece">Masterpiece</option>
     <option value="remove">Remove Movie</option>
-    </select>${appendStreaming(pullMovieObjOut(movieTitle))}</li>`;
+    </select>
+    </li>`;
     
     
     generateEventListeners();

@@ -244,8 +244,15 @@ li.current-user-display{
   z-index: 1;
 }
 
-.dropdown:hover .dropdown-content {
+.unwatched-movies .dropdown-content{
+    font-size: .7em;
+}
+
+.random-movie .dropdown:hover .dropdown-content {
   display: block;
+}
+.unwatched-movies .dropdown:active .dropdown-content{
+    display: block;
 }
 
 .rating-append{
