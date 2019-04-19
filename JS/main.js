@@ -244,29 +244,30 @@ function clickedSuggestion(e){
 
 function addMovie(){
     let movieTitle = addMovieText.value;
-    movieObj = {
-        title: movieTitle
-    };
-    fetch(`https://www.omdbapi.com/?t=${movieObj.title}&apikey=7b75867a`).then(response => response.json()).then(movie =>{
+    
+    fetch(`https://www.omdbapi.com/?t=${movieTitle}&apikey=7b75867a`).then(response => response.json()).then(movie =>{
     movieJSON = movie;
-}).then( () =>{
-    const ratings = movieJSON.Ratings;
-    movieObj.imdb = ratings.find(rating => rating.Source == "Internet Movie Database").Value;;
-    movieObj.RT = ratings.find(rating => rating.Source == "Rotten Tomatoes").Value;
-    movieObj.metaCritic = ratings.find(rating => rating.Source == "Metacritic").Value;;
-    movieObj.runTime = movieJSON.Runtime;
-    movieObj.plot = movieJSON.Plot;
-})
-unwatchedMovies.push(movieTitle);
-movieObjArray.push(movieObj);
-streamCheck(movieTitle);
-appendUnwatchedMovieList(movieTitle);
-db.collection(currentUserEmail).doc(currentList).update({
-    movieObjArray: movieObjArray
-})
-.then(() => console.log("document written"))
-.catch(() => console.error("doc writing error"));
-addMovieText.value = ""
+    }).then( () =>{
+        const ratings = movieJSON.Ratings;
+        movieObj = {
+            title: movieTitle,
+            imdb: ratings.find(rating => rating.Source == "Internet Movie Database").Value,
+            RT: ratings.find(rating => rating.Source == "Rotten Tomatoes").Value,
+            metaCritic: ratings.find(rating => rating.Source == "Metacritic").Value,
+            runTime: movieJSON.Runtime,
+            plot: movieJSON.Plot
+        };
+        unwatchedMovies.push(movieTitle);
+        movieObjArray.push(movieObj);
+        streamCheck(movieTitle);
+        appendUnwatchedMovieList(movieTitle);
+        db.collection(currentUserEmail).doc(currentList).update({
+            movieObjArray: movieObjArray
+        })
+        .then(() => console.log("document written"))
+        .catch(() => console.error("doc writing error"));
+        addMovieText.value = ""
+    })
 }
 
 addMovieButton.addEventListener("click", addMovie);
