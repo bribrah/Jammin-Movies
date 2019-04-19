@@ -59,22 +59,20 @@ function updateMovieObjs(){
         fetch(`https://www.omdbapi.com/?t=${movieObj.title}&apikey=7b75867a`).then(response => response.json()).then(movie =>{
         movieJSON = movie;
     }).then( () =>{
+        console.log(movieJSON)
         const ratings = movieJSON.Ratings;
-        movieObj.imdb = ratings.find(rating => rating.Source == "Internet Movie Database").Value;;
-        movieObj.RT = ratings.find(rating => rating.Source == "Rotten Tomatoes").Value;
-        movieObj.metaCritic = ratings.find(rating => rating.Source == "Metacritic").Value;;
+        const imdb = ratings.find(rating => rating.Source == "Internet Movie Database");
+        const RT = ratings.find(rating => rating.Source == "Rotten Tomatoes");
+        const metaCritic = ratings.find(rating => rating.Source == "Metacritic");
+        imdb ? imdbRating = imdb.Value : imdbRating = "NA";
+        RT ? RTRating = RT.Value : RTRating = "NA";
+        metaCritic ? metaCriticRating = metaCritic.Value: metaCriticRating = "NA"
+        movieObj.imdb = imdbRating;
+        movieObj.RT = RTRating;
+        movieObj.metaCritic = metaCriticRating;
         movieObj.runTime = movieJSON.Runtime;
         movieObj.plot = movieJSON.Plot;
-    }).catch(()=>fetch(`https://www.omdbapi.com/?t=${movieObj.title}&apikey=7b75867a`).then(response => response.json()).then(movie =>{
-    movieJSON = movie;
-}).then( () =>{
-    const ratings = movieJSON.Ratings;
-    movieObj.imdb = ratings.find(rating => rating.Source == "Internet Movie Database").Value;;
-    movieObj.RT = ratings.find(rating => rating.Source == "Rotten Tomatoes").Value;
-    movieObj.metaCritic = ratings.find(rating => rating.Source == "Metacritic").Value;;
-    movieObj.runTime = movieJSON.Runtime;
-    movieObj.plot = movieJSON.Plot;
-}))
+    })
 })
 db.collection(currentUserEmail).doc(currentList).update({
     movieObjArray: movieObjArray
@@ -248,33 +246,33 @@ function addMovie(){
     
     fetch(`https://www.omdbapi.com/?t=${movieTitle}&apikey=7b75867a`).then(response => response.json()).then(movie =>{
     movieJSON = movie;
-    }).then( () =>{
-        const ratings = movieJSON.Ratings;
-        const imdb = ratings.find(rating => rating.Source == "Internet Movie Database");
-        const RT = ratings.find(rating => rating.Source == "Rotten Tomatoes");
-        const metaCritic = ratings.find(rating => rating.Source == "Metacritic");
-        imdb ? imdbRating = imdb.Value : imdbRating = "NA";
-        RT ? RTRating = RT.Value : RTRating = "NA";
-        metaCritic ? metaCriticRating = metaCritic.Value: metaCriticRating = "NA"
-        movieObj = {
-            title: movieTitle,
-            imdb: imdbRating,
-            RT: RTRating,
-            metaCritic: metaCriticRating || "",
-            runTime: movieJSON.Runtime,
-            plot: movieJSON.Plot
-        };
-        unwatchedMovies.push(movieTitle);
-        movieObjArray.push(movieObj);
-        streamCheck(movieTitle);
-        appendUnwatchedMovieList(movieTitle);
-        db.collection(currentUserEmail).doc(currentList).update({
-            movieObjArray: movieObjArray
-        })
-        .then(() => console.log("document written"))
-        .catch(() => console.error("doc writing error"));
-        addMovieText.value = ""
+}).then( () =>{
+    const ratings = movieJSON.Ratings;
+    const imdb = ratings.find(rating => rating.Source == "Internet Movie Database");
+    const RT = ratings.find(rating => rating.Source == "Rotten Tomatoes");
+    const metaCritic = ratings.find(rating => rating.Source == "Metacritic");
+    imdb ? imdbRating = imdb.Value : imdbRating = "NA";
+    RT ? RTRating = RT.Value : RTRating = "NA";
+    metaCritic ? metaCriticRating = metaCritic.Value: metaCriticRating = "NA"
+    movieObj = {
+        title: movieTitle,
+        imdb: imdbRating,
+        RT: RTRating,
+        metaCritic: metaCriticRating || "",
+        runTime: movieJSON.Runtime,
+        plot: movieJSON.Plot
+    };
+    unwatchedMovies.push(movieTitle);
+    movieObjArray.push(movieObj);
+    streamCheck(movieTitle);
+    appendUnwatchedMovieList(movieTitle);
+    db.collection(currentUserEmail).doc(currentList).update({
+        movieObjArray: movieObjArray
     })
+    .then(() => console.log("document written"))
+    .catch(() => console.error("doc writing error"));
+    addMovieText.value = ""
+})
 }
 
 addMovieButton.addEventListener("click", addMovie);
