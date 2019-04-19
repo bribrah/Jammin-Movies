@@ -190,49 +190,27 @@ const suggestions = document.querySelector(".suggestions");
 
 let lastSuggestionArray = [];
 
-addMovieText.addEventListener('change',displayMatches);
 addMovieText.addEventListener('keyup',displayMatches);
 
-
-function findMatches(wordToMatch, streamableMovies){
-    return streamableMovies.filter(movie => {
-        const regex = new RegExp(wordToMatch, 'gi');
-        return movie.match(regex);
-    });
-}
-
 function displayMatches(e){
-    let matchArray = [];
-    if (e){
-        
-        if (e.key =="Backspace" || addMovieText.value.length <= 1){
-            matchArray = findMatches(this.value,allStreamableMovies);
-            
+    setTimeout( () =>{
+        suggestions.innerHTML = "";
+        if (e){
+            fetch(`https://www.omdbapi.com/?s=${this.value}&type=movie&apikey=7b75867a`).then(response => response.json()).then(searchResults =>{
+                const movies = searchResults.Search;
+                console.log(movies);
+                movies.forEach(movie =>{
+                    suggestions.innerHTML += `<li class="name-suggestion"><img src="${movie.Poster}"> <span>${movie.Title}(${movie.Year})</span></li>`
+                })
+                const titleSuggestions = document.querySelectorAll(".name-suggestion");
+                titleSuggestions.forEach(suggestion=> suggestion.addEventListener("click", clickedSuggestion));
+            })
         }
-        else{
-            matchArray = findMatches(this.value,lastSuggestionArray);
-        }
-    }
-    lastSuggestionArray = matchArray;
-    if (matchArray.length < 100){
-        
-        const html = matchArray.map(movie => {
-            const regex = new RegExp(this.value, 'gi');
-            const movieName = movie.replace(regex, `${this.value}`);
-            
-            return `
-            <li class="nameSuggestion">
-            <span>${movieName}</span>
-            </li>
-            `;
-        }).join('');
-        suggestions.innerHTML = html;
-        const titleSuggestions = document.querySelectorAll(".nameSuggestion");
-        titleSuggestions.forEach(suggestion=> suggestion.addEventListener("click", clickedSuggestion));
-    }
+    },500)
 }
 
 function clickedSuggestion(e){
+    console.log(this.querySelector("span").textContent)
     addMovieText.value = this.querySelector("span").textContent;
     displayMatches();
 }

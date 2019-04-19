@@ -126,7 +126,6 @@ li.current-user-display{
 
 .movie-add{
     text-align: center;
-    max-width: 55vw;
     margin: auto;
 }
 .suggestions {
@@ -147,11 +146,17 @@ li.current-user-display{
     display: flex;
     justify-content: space-between;
     text-transform: capitalize;
+    font-size: 2em;
 }
+
 
 .suggestions li:hover{
     background-color: lightblue;
     cursor: pointer;
+}
+
+.suggestions img{
+    height: 25vw;
 }
 
 
