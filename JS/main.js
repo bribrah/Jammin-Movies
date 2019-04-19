@@ -249,11 +249,17 @@ function addMovie(){
     movieJSON = movie;
     }).then( () =>{
         const ratings = movieJSON.Ratings;
+        const imdb = ratings.find(rating => rating.Source == "Internet Movie Database");
+        const RT = ratings.find(rating => rating.Source == "Rotten Tomatoes");
+        const metaCritic = ratings.find(rating => rating.Source == "Metacritic");
+        imdb ? imdbRating = imdb.Value : imdbRating = "NA";
+        RT ? RTRating = RT.Value : RTRating = "NA";
+        metaCritic ? metaCriticRating = metaCritic.Value: metaCriticRating = "NA"
         movieObj = {
             title: movieTitle,
-            imdb: ratings.find(rating => rating.Source == "Internet Movie Database").Value,
-            RT: ratings.find(rating => rating.Source == "Rotten Tomatoes").Value,
-            metaCritic: ratings.find(rating => rating.Source == "Metacritic").Value,
+            imdb: imdbRating,
+            RT: RTRating,
+            metaCritic: metaCriticRating || "",
             runTime: movieJSON.Runtime,
             plot: movieJSON.Plot
         };
