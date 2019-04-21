@@ -17,7 +17,8 @@ firebase.auth().onAuthStateChanged(function(user) {
     } else {
         window.sessionStorage.setItem("loggedIn","false");
         console.log("no user signed in")
-        if (window.location.href == "list.html" || window.location.href == "file:///home/brian/Desktop/bribrah_coding/web-projects/jammin-movies/list.html"){
+        console.log
+        if (window.location.pathname == "/list.html" || window.location.href == "file:///home/brian/Desktop/bribrah_coding/web-projects/jammin-movies/list.html"){
             window.location.href = "login.html";
         }
     }
