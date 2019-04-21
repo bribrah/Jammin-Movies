@@ -25,7 +25,7 @@ function appendInfo(movie){
         append += `<div class="rating-append">Rotten Tomatoes: ${RT}</div>`
     }
     if(metaCritic){
-        append += `<div class="rating-append">Meatcritic: ${metaCritic}</div>`
+        append += `<div class="rating-append">Metacritic: ${metaCritic}</div>`
     }
     //runtime
     append += `<div class="rating-append">Runtime: ${runTime}</div>`
@@ -212,7 +212,6 @@ function displayMatches(e){
 function clickedSuggestion(e){
     console.log(this.querySelector("span").textContent)
     addMovieText.value = this.querySelector("span").textContent;
-    displayMatches();
 }
 
 
