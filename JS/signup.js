@@ -2,6 +2,7 @@ const emailInput = document.querySelector("#email");
 const passwordInput = document.querySelector("#password");
 const passwordConfInput = document.querySelector("#password-conf");
 const errorsOutput = document.querySelector(".signup-errors");
+const success = document.querySelector(".signup-success");
 const submit = document.querySelector("#create-account");
 const firstList = document.querySelector("#first-list");
 const db = firebase.firestore();
@@ -9,10 +10,11 @@ const db = firebase.firestore();
 
 submit.addEventListener('click', createAccount);
 function createAccount(){
+    errorsOutput.textContent = "";
     if (passwordInput.value == passwordConfInput.value){
         firebase.auth().createUserWithEmailAndPassword(emailInput.value, passwordInput.value).then(()=>{
             
-            errorsOutput.textContent = "Account Created.";
+            success.textContent = "Account Created.";
             db.collection(emailInput.value).doc("movie_lists").set({
                 movie_list_array: []
             }).then(() =>{

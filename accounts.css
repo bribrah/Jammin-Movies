@@ -2,8 +2,10 @@
     margin: auto;
     width: 50%;
     min-width: 280px;
-    margin-top: 15%;
     text-align: center;
+}
+.signup-form .header{
+    margin-top: 20%;
 }
 
 .form-text{

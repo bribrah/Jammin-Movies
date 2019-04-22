@@ -5,6 +5,9 @@ html{
     padding-bottom: 30px;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
+.center-block{
+    margin: auto;
+}
 .navbar{
     list-style-type: none;
     margin: 0;

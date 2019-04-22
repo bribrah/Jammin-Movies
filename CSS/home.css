@@ -8,9 +8,8 @@
 
 .jumbotron h1{
     position: relative;
-    border-bottom: 1px solid black;
+    border-bottom: 2px solid black;
     padding-top: 3%;
-    font-size: 3em;
     margin-bottom: 3px
 }
 .jumbotron h2{

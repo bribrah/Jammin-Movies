@@ -7,6 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="CSS/main.css">
     <link rel="stylesheet" href="accounts.css">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="CSS/materialize.css"  media="screen,projection"/>
+    
     <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase.js"></script>
     <script>
         // Initialize Firebase
@@ -33,21 +38,40 @@
         <div class="header">
             <h1>Account Creation</h1>
         </div>
-        <div class="signup-errors"></div>
-        <label for="email"> Email </label> 
-        <input class="form-text" type="text" id="email">
-        
+        <div></div>
+        <div class="signup-errors red"></div>
+        <div class="signup-success green"></div>
+        <div class="signup-form">
+            <div class="input-field">
+                
+                <label for="email"> Email </label> 
+                <input class="form-text" type="text" id="email">
+                
+            </div>
+        </div>
         <!-- <label for="first-list">Name your First Movie List</label>
             <input class="form-text" type="text" name="" id="first-list"> -->
+            <div class="signup-form">
+                
+                <div class="input-field">
+                    
+                    <label for="password" class="center-align" >Password</label>
+                    <input type="password" id="password" class="form-text" >
+                </div>
+            </div>
             
-            <label for="password">Password</label>
-            <input class="form-text" type="password" id="password">
-            
-            <label for="password-conf">Password Confirmation</label>
-            <input class="form-text" type="password" id="password-conf">
-            <input type="submit" id="create-account">
+            <div class="signup-form">
+                <div class="input-field">
+                    
+                    <label for="password-conf">Password Confirmation</label>
+                    <input class="form-text" type="password" id="password-conf">
+                </div>
+            </div>
+            <button class="btn waves-effect waves-light" type="submit" id="create-account">Submit</button>
         </div>
         
         <script src="JS/signup.js"></script>
+        <script type="text/javascript" src="JS/materialize.js"></script>
+        
     </body>
     </html>
