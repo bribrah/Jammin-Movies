@@ -98,11 +98,11 @@ li.current-user-display{
     background-image: url(../images/popcorn.png);
     background-repeat: no-repeat;
     background-position: 50% 50%;
-    box-shadow: 4px 4px 5px black;
-    border-radius: 230px;
+    box-shadow: 4px 4px 5px 4px black;
+    border-radius: 225px;
     /* put the height and width of your image here */
-    height: 230px;
-    width: 230px;
+    height: 225px;
+    width: 225px;
     border: none;
     color:white;
     font-weight: bold;
