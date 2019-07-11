@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Landing Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="CSS/main.css">
+    <link rel="stylesheet" href="CSS/home.css">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="CSS/materialize.css"  media="screen,projection"/>
+
+    <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyC-TNGhKhFtSMicH20PxCHVeauBKDFsITU",
+            authDomain: "jammin-movies.firebaseapp.com",
+            databaseURL: "https://jammin-movies.firebaseio.com",
+            projectId: "jammin-movies",
+            storageBucket: "jammin-movies.appspot.com",
+            messagingSenderId: "203686718902"
+        };
+        firebase.initializeApp(config);
+    </script>
+</head>
+<body>
+    <ul class="navbar">
+        <li><a href="index.html">Home</a></li>
+        <div id="login-signup">
+            <li><a class="login" href="login.html">Login</a></li>
+            <li><a href="signup.html" style="">Sign Up</a></li>
+        </div>
+        
+    </ul>
+    
+    <div class="jumbotron">
+        <h1>Welcome to Jammin Movies</h1>
+        <h2>A web app to make, track, and rate movie lists.</h2>
+        <a href="signup.html" class="waves-effect btn-large">Sign Up Now!</a>
+    </div>
+    <div class="tutorial container">
+        <h1>How to Use:</h1>
+        <div>
+            <h4>1. Make an account by clicking the button above.</h4> 
+            <p>After creating account you will automatically be logged in and redirected to your lists page and directed to name your first list. You will not be able to use most of this websites features without creating an account.</p>
+        </div>
+        <div>
+            <h4>2. Add movies to your list.</h4>
+            <p>
+                There will be an add movies text box at the bottom of the page. You can type any movie into there and hit the add movie button to add the movie to your list. While you are typing there will be autocomplete
+                boxes popping up underneath the text box. The movies that are tracked by autocomplete are any movie that is streamable! If you click on the autocomplete box that you want, it will populate the textbox with that movie.
+                If a movie is a streamable, it will show icons next to its name in your list of the locations that it is streamable from.
+            </p>
+        </div>
+        <div>
+            <h4>3. Rate Movies.</h4>
+            <p>
+                Next to each movie in your list there is a drop down menu. This drop down menu has a variety of ratings that you can choose from and also a remove movie choice that removes the movie from your
+                list. Upon choosing a rating, the movie will be added to the watched movie portion of the screen and will no longer be able to be randomly chosen by the random movie chooser button.
+            </p>
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="JS/materialize.js"></script>
+    <script src="JS/checkUser.js"></script>
+</body>
+</html>

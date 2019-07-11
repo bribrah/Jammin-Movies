@@ -1,0 +1,14 @@
+HOME PAGE:
+1. Change color Scheme
+2. Format tet so that takes up whole PAGE
+
+CORE:
+Email Verification?
+1. Get rid of all prompts.
+
+ACCOUNTS:
+1. Add choose streaming services.
+
+LISTS:
+1. Add dropdown info to watched moves
+2. Fix autocomplete to include all movies

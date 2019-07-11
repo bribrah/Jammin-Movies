@@ -1,0 +1,24 @@
+.signup-form{
+    margin: auto;
+    width: 50%;
+    min-width: 280px;
+    text-align: center;
+}
+.signup-form .header{
+    margin-top: 20%;
+}
+
+.form-text{
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    margin: auto;
+    flex: 2;
+    justify-content: flex-end;
+}
+.form-text {
+    flex: 1;
+}
+.form-text label{
+}
+

@@ -1,0 +1,11 @@
+.list-link:hover{
+    cursor: pointer;
+    color: blue;
+}
+
+.list-node{
+    margin-bottom: 10px;
+}
+.subscribe{
+    margin-left: 4px;
+}
